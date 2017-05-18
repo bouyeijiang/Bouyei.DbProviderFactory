@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>bouyei</authors>
+    <owners>bouyei</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>database common provider interface,db2,sql serer,oracle,access etc</description>
+    <releaseNotes>first version for db provider interface.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>SqlServer db2 Oracle</tags>
+  </metadata>
+</package>
