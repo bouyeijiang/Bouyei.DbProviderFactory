@@ -38,6 +38,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         SqlBulk sqlBulkCopy = null;
         Db2Bulk db2BulkCopy = null;
         OracleBulk oracleBulkCopy = null;
+        MysqlBulk mySqlBulkCopy = null;
 
         ~DbBulkCopy()
         {
@@ -100,6 +101,10 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                     oracleBulkCopy = new OracleBulk(ConnectionString, BulkCopyTimeout, DbBulkCopyOption);
                 }
                 oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
+            }
+            else if (ProviderName == ProviderType.MySql)
+            {
+                mySqlBulkCopy = new MysqlBulk(ConnectionString, BulkCopyTimeout);
             }
         }
 
@@ -169,6 +174,15 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                 oracleBulkCopy = new OracleBulk(dbConn, BulkCopyTimeout, DbBulkCopyOption);
                 oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
+            else if (ProviderName == ProviderType.MySql)
+            {
+                if(mySqlBulkCopy!=null || this.ConnectionString != connectionString)
+                {
+                    if (mySqlBulkCopy != null)
+                        mySqlBulkCopy.Dispose();
+                }
+                mySqlBulkCopy = new MysqlBulk(ConnectionString, BulkCopyTimeout);
+            }
         }
 
         public void Close()
@@ -176,6 +190,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             if (ProviderName == ProviderType.DB2) db2BulkCopy.Close();
             else if (ProviderName == ProviderType.SqlServer) sqlBulkCopy.Close();
             else if (ProviderName == ProviderType.Oracle) oracleBulkCopy.Close();
+            else if (ProviderName == ProviderType.MySql) mySqlBulkCopy.Close();
         }
 
         public void Open()
@@ -198,6 +213,25 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             else if (ProviderName == ProviderType.Oracle)
             {
                 oracleBulkCopy.WriteToServer(dataTable, BatchSize);
+            }
+            else if (ProviderName == ProviderType.MySql)
+            {
+                UtilIO.CsvHelper csv = new UtilIO.CsvHelper();
+                string fname = dataTable.TableName + DateTime.Now.Ticks;
+                bool rt = csv.ExportSvcToFile(dataTable, fname);
+                if (rt == false) return;
+
+               int rows= mySqlBulkCopy.WriteToServer(new MysqlBulkLoaderInfo()
+                {
+                    FileName = fname,
+                    FieldTerminator = ",",
+                    LineTerminator = "\r\n",
+                    TableName = dataTable.TableName,
+                    FieldQuotationCharacter = '"',
+                    EscapeCharacter = '"',
+                });
+
+                if (rows == 0) throw new Exception("导入空数据...");
             }
             else
             {

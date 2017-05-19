@@ -66,6 +66,10 @@
     <Reference Include="IBM.Data.DB2">
       <HintPath>libs\IBM.Data.DB2.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=7.0.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Program Files (x86)\MySQL\MySQL Connector Net 7.0.7\Assemblies\v4.5.1\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Oracle.DataAccess">
       <HintPath>libs\Oracle.DataAccess.dll</HintPath>
     </Reference>
@@ -91,6 +95,7 @@
     <Compile Include="DbAdoProvider\Entities\ProviderType.cs" />
     <Compile Include="DbAdoProvider\IDbProvider.cs" />
     <Compile Include="DbAdoProvider\Plugins\Db2Bulk.cs" />
+    <Compile Include="DbAdoProvider\Plugins\MysqlBulk.cs" />
     <Compile Include="DbAdoProvider\Plugins\OracleBulk.cs" />
     <Compile Include="DbAdoProvider\Plugins\SqlBulk.cs" />
     <Compile Include="DbEFLayer.cs" />
@@ -112,6 +117,7 @@
     <Compile Include="Structures.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UtilIO\CsvHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
