@@ -74,8 +74,6 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
 
         public void Update<TEntity>(TEntity entity) where TEntity : class
         {
-            //this.eContext.Detach<TEntity>(entity);
-            this.eContext.Detach<TEntity>(entity);
             this.eContext.Update(entity);
         }
 

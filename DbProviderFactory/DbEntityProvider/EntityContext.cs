@@ -136,6 +136,7 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
             //{
                 //自定义映射程序集所在位置
                 string mappingPath = ConfigurationManager.AppSettings.Get("AssemblyPath");
+    
                 string flag = mappingPath.Substring(0, 3).ToLower();
                 string path = mappingPath.Substring(3);
                 if (flag == "bs-")

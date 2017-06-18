@@ -79,7 +79,7 @@ namespace Bouyei.ProviderFactory.Mapper
             var psFrom = typeof(FromEntity).GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var pFrom in psFrom)
             {
-                if (filterType != FilterType.None
+                if (filterType != FilterType.Default
                     && FilterColumnNames.Length > 0)
                 {
                     switch (filterType)
@@ -122,7 +122,7 @@ namespace Bouyei.ProviderFactory.Mapper
 
     public enum FilterType
     {
-        None=0,
+        Default=0,
         Ignore = 1,
         Include = 2,
         NullIgnore = 4
