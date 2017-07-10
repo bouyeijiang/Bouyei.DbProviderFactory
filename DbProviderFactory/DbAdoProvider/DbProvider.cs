@@ -12,9 +12,6 @@ using System.Data.Common;
 using System.Collections.Generic;
 using System.Threading;
 
-using System.Data.SqlClient;
-using IBM.Data.DB2;
-
 namespace Bouyei.ProviderFactory.DbAdoProvider
 {
     /// <summary>
