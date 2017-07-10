@@ -64,19 +64,20 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
 
             dbFactory = GetDbProviderFactory(invariantName);
 
-            if (dbFactory == null) throw new Exception("不提供支持该" + dbProviderType.ToString() + "类型的实例");
+            if (dbFactory == null)
+                throw new Exception("不提供支持该" + dbProviderType.ToString() + "类型的实例");
         }
 
         protected DbConnection CreateConnection(string ConnectionString)
         {
             if (IsSingleton)
             {
-                if (dbConn == null) dbConn = dbFactory.CreateConnection();
+                if (dbConn == null)
+                    dbConn = dbFactory.CreateConnection();
             }
             else
             {
-                if (dbConn != null && dbConn.State != ConnectionState.Closed) dbConn.Close();
-
+                if (dbConn != null) dbConn.Dispose();
                 dbConn = dbFactory.CreateConnection();
             }
             if (dbConn.ConnectionString != ConnectionString)
@@ -92,10 +93,12 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             if (IsSingleton)
             {
-                if (dbDataAdapter == null) dbDataAdapter = dbFactory.CreateDataAdapter();
+                if (dbDataAdapter == null)
+                    dbDataAdapter = dbFactory.CreateDataAdapter();
             }
             else
             {
+                if (dbDataAdapter != null) dbDataAdapter.Dispose();
                 dbDataAdapter = dbFactory.CreateDataAdapter();
             }
 
@@ -106,10 +109,12 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             if (IsSingleton)
             {
-                if (dbCommandBuilder == null) dbCommandBuilder = dbFactory.CreateCommandBuilder();
+                if (dbCommandBuilder == null)
+                    dbCommandBuilder = dbFactory.CreateCommandBuilder();
             }
             else
             {
+                if (dbCommandBuilder != null) dbCommandBuilder.Dispose();
                 dbCommandBuilder = dbFactory.CreateCommandBuilder();
             }
             return dbCommandBuilder;
@@ -119,10 +124,12 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             if (IsSingleton)
             {
-                if (dbCommand == null) dbCommand = dbFactory.CreateCommand();
+                if (dbCommand == null)
+                    dbCommand = dbFactory.CreateCommand();
             }
             else
             {
+                if (dbCommand != null) dbCommand.Dispose();
                 dbCommand = dbFactory.CreateCommand();
             }
             if (dbTrans != null)
@@ -158,7 +165,8 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
 
             if (isTransaction)
                 dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString, CreateConnection(ConnectionString));
-            else dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString);
+            else
+                dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString);
             //}
 
             return dbBulkCopy;

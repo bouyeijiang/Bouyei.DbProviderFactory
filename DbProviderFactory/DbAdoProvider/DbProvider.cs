@@ -60,7 +60,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         public DbProvider(
             string connectionString,
             ProviderType providerType = ProviderType.SqlServer,
-            bool isSingleton = true)
+            bool isSingleton = false)
             : base(providerType, isSingleton)
         {
             this.ProviderType = providerType;
@@ -69,7 +69,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
 
         public DbProvider(
             ProviderType providerType = ProviderType.SqlServer,
-            bool isSingleton = true)
+            bool isSingleton = false)
             : base(providerType, isSingleton)
         {
             this.ProviderType = providerType;
@@ -212,7 +212,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
-                                return ResultInfo<int, string>.Create<int, string>(-1, "no data rows");
+                                return ResultInfo<int, string>.Create(-1, "no data rows");
 
                             while (reader.Read())
                             {

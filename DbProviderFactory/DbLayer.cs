@@ -9,7 +9,7 @@ namespace Bouyei.ProviderFactory
     {
         public DbLayer(string ConnectionString,
             ProviderType ProviderType = ProviderType.SqlServer,
-            bool IsSingleton = true)
+            bool IsSingleton = false)
             : base(ConnectionString, ProviderType, IsSingleton)
         {
         }
@@ -28,7 +28,7 @@ namespace Bouyei.ProviderFactory
         private DbProvider dbProvider = null;
         private string ConnectionString = string.Empty;
 
-        public DbLayerR(string ConnectionString,ProviderType providerType,bool isSingleton=true)
+        public DbLayerR(string ConnectionString,ProviderType providerType,bool isSingleton=false)
         {
             this.ConnectionString = ConnectionString;
             dbProvider = new DbProvider(ConnectionString, providerType, isSingleton);

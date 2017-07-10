@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Bouyei.ProviderFactory</RootNamespace>
     <AssemblyName>Bouyei.ProviderFactory</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -87,11 +87,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbAdoProvider\Assembly\DbBulkCopyReflection.cs" />
     <Compile Include="DbAdoProvider\Assembly\DbReflection.cs" />
     <Compile Include="DbAdoProvider\DataTableHelper.cs" />
-    <Compile Include="DbAdoProvider\DbBulkCopyDynamic.cs" />
-    <Compile Include="DbAdoProvider\Entities\DbBulkCopyProvider.cs" />
     <Compile Include="DbAdoProvider\Entities\ProviderType.cs" />
     <Compile Include="DbAdoProvider\IDbProvider.cs" />
     <Compile Include="DbAdoProvider\Plugins\Db2Bulk.cs" />

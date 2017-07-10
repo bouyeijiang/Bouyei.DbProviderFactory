@@ -68,7 +68,8 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             this.ProviderName = providerType;
         }
 
-        public DbBulkCopy(ProviderType providerType, string connectionString,
+        public DbBulkCopy(ProviderType providerType, 
+            string connectionString,
             int bulkcopyTimeout = 1800,
             int batchSize = 102400,
             BulkCopyOptions dbBulkCopyOption = BulkCopyOptions.Default)
@@ -108,7 +109,9 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             }
         }
 
-        public DbBulkCopy(ProviderType providerType, string connectionString, IDbConnection dbConnection,
+        public DbBulkCopy(ProviderType providerType,
+            string connectionString, 
+            IDbConnection dbConnection,
             int bulkcopyTimeout = 1800,
             int batchSize = 102400,
             BulkCopyOptions dbBulkCopyOption = BulkCopyOptions.Default,
