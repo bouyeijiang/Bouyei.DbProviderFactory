@@ -479,8 +479,10 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                         }
 
                         object obj = cmd.ExecuteScalar();
-                        if (obj == null) return new ResultInfo<T, string>(default(T), string.Empty);
-                        return new ResultInfo<T, string>((T)obj, string.Empty);
+                        if (obj == null)
+                            return new ResultInfo<T, string>(default(T), string.Empty);
+                        return
+                            new ResultInfo<T, string>((T)obj, string.Empty);
                     }
                 }
             }
@@ -590,7 +592,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                             if (reader.HasRows == false)
                                 return new ResultInfo<List<T>, string>(new List<T>(1), string.Empty);
 
-                            var items = DbReflection.GetGenericObjectValues<T>(reader);
+                            var items = reader.GetGenericObjectValues<T>();
 
                             return new ResultInfo<List<T>, string>(items, string.Empty);
                         }
@@ -694,120 +696,4 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         }
         #endregion
     }
-
-    #region 参数类
-    public class DbProviderParameter : DbParameter
-    {
-        public override DbType DbType { get; set; }
-
-        public override string ParameterName { get; set; }
-
-        public override int Size { get; set; }
-
-        public override object Value { get; set; }
-
-        public override ParameterDirection Direction { get; set; }
-
-        public override string SourceColumn { get; set; }
-
-        public override DataRowVersion SourceVersion { get; set; }
-
-        public override bool SourceColumnNullMapping { get; set; }
-
-        public override bool IsNullable { get; set; }
-
-        public override void ResetDbType()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class DbExecuteParameter
-    {
-        public DbExecuteParameter(int ExecuteTimeout)
-        {
-            this.executeTimeout = ExecuteTimeout;
-        }
-
-        public DbExecuteParameter(params DbProviderParameter[] dbProviderParameters)
-        {
-            this.dbProviderParameters = dbProviderParameters;
-        }
-
-        public DbExecuteParameter(string CommandText,
-            int ExectueTimeout = 1800,
-            DbProviderParameter[] dbProviderParameters = null)
-        {
-            this.CommandText = CommandText;
-            this.executeTimeout = ExectueTimeout;
-            this.dbProviderParameters = dbProviderParameters;
-        }
-
-        public string CommandText { get; set; }
-
-        private int executeTimeout = 1800;
-        /// <summary>
-        /// 超时默认值,1800s
-        /// </summary>
-        public int ExectueTimeout { get { return executeTimeout; } set { executeTimeout = value; } }
-
-        public DbProviderParameter[] dbProviderParameters { get; set; }
-    }
-
-    public class DbExecuteBulkParameter : DbExecuteParameter
-    {
-
-        public DbExecuteBulkParameter()
-            : base()
-        { }
-
-        public DbExecuteBulkParameter(DataTable dstDataTable,
-            int BatchSize = 10240,
-            int ExecuteTimeout = 1800,
-            bool IsTransaction = false)
-            : base(ExecuteTimeout)
-        {
-            this.DstDataTable = dstDataTable;
-            this.DstTableName = dstDataTable.TableName;
-            this.batchSize = BatchSize;
-            this.IsTransaction = IsTransaction;
-        }
-
-        public DbExecuteBulkParameter(string dstTableName, IDataReader iDataReader,
-           int BatchSize = 10240,
-           int ExecuteTimeout = 1800,
-           bool IsTransaction = false)
-            : base(ExecuteTimeout)
-        {
-            this.IDataReader = iDataReader;
-            this.DstTableName = dstTableName;
-            this.batchSize = BatchSize;
-            this.IsTransaction = IsTransaction;
-        }
-
-        public string DstTableName { get; private set; }
-        /// <summary>
-        /// 如果使用DataTable该数据集批量写入，必需设置TableName
-        /// </summary>
-        public DataTable DstDataTable { get; set; }
-
-        public IDataReader IDataReader { get; set; }
-
-        private int batchSize = 10240;
-        /// <summary>
-        /// 批量大小,默认10240
-        /// </summary>
-        public int BatchSize { get { return batchSize; } set { batchSize = value; } }
-
-        /// <summary>
-        /// 是否启用事务
-        /// </summary>
-        public bool IsTransaction { get; set; }
-
-        public bool IsAutoDispose { get; set; }
-
-        public Action<IDbTransaction, int> TransactionCallback { get; set; }
-    }
-
-    #endregion
 }

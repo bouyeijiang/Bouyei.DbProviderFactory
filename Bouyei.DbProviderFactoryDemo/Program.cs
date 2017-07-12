@@ -10,7 +10,7 @@ namespace DbProviderDemo
 {
     using Bouyei.ProviderFactory.DbAdoProvider;
     using Bouyei.ProviderFactory.DbEntityProvider;
-    using Bouyei.ProviderFactory.Mapper;
+    using Bouyei.ProviderFactory.DbMapper;
     using DbEntities; 
 
     class Program
@@ -27,11 +27,14 @@ namespace DbProviderDemo
             //});
 
             //entity framework demo one:
-            DbEFLayer efProvider = DbEFLayer.CreateEFLayer("DbConnection");
+            LayerOrm efProvider = LayerOrm.CreateLayerOrm("DbConnection");
+
+            DbProvider dbProvider = new DbProvider("", ProviderType.SqlServer);
+
             try
             {
-                bool rtb = efProvider.Provider.NoTrackQuery<User>(x => x.Id == 1).Any();
-                User item = efProvider.Provider.GetById<User>(1);
+                bool rtb = efProvider.NoTrackQuery<User>(x => x.Id == 1).Any();
+                User item = efProvider.GetById<User>(1);
 
                 ////entity framework demo two:
                 //IEntityProvider iEfProvider = EntityProvider.CreateProvider();
@@ -54,7 +57,7 @@ namespace DbProviderDemo
                 };
 
                 //EntityMapper.MapTo<UserDto, User>(ud, item);
-                efProvider.Provider.Update(u);
+                efProvider.Update(u);
                 int rt = efProvider.SaveChanges();
             }
             catch(Exception ex)

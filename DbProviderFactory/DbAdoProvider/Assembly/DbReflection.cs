@@ -9,23 +9,19 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Data.Common;
+using System.Data;
 
 namespace Bouyei.ProviderFactory.DbAdoProvider
 {
-    internal class DbReflection
+    internal static class DbReflection
     {
-        internal DbReflection()
-        {
-        }
-
         /// <summary>
         /// 根据DbDataReader映射到结构体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static T GetGenericObjectValue<T>(DbDataReader reader) where T : new()
+        public static T GetGenericObjectValue<T>(this IDataReader reader) where T : new()
         {
             T value = new T();
 
@@ -50,7 +46,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static List<T> GetGenericObjectValues<T>(DbDataReader reader)where T:new()
+        public static List<T> GetGenericObjectValues<T>(this IDataReader reader)where T:new()
         {
             List<T> items = new List<T>(64);
             PropertyInfo[] pinfos = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);

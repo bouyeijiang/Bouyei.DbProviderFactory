@@ -62,7 +62,8 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="IBM.Data.DB2">
+    <Reference Include="IBM.Data.DB2, Version=9.0.0.2, Culture=neutral, PublicKeyToken=7c307b91aa13d208, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\IBM.Data.DB2.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=7.0.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
@@ -88,13 +89,42 @@
   <ItemGroup>
     <Compile Include="DbAdoProvider\Assembly\DbReflection.cs" />
     <Compile Include="DbAdoProvider\DataTableHelper.cs" />
+    <Compile Include="DbAdoProvider\Entities\Models.cs" />
     <Compile Include="DbAdoProvider\Entities\ProviderType.cs" />
     <Compile Include="DbAdoProvider\IDbProvider.cs" />
     <Compile Include="DbAdoProvider\Plugins\Db2Bulk.cs" />
     <Compile Include="DbAdoProvider\Plugins\MysqlBulk.cs" />
     <Compile Include="DbAdoProvider\Plugins\OracleBulk.cs" />
     <Compile Include="DbAdoProvider\Plugins\SqlBulk.cs" />
-    <Compile Include="DbEFLayer.cs" />
+    <Compile Include="DbSqlProvider\Expression\Delete.cs" />
+    <Compile Include="DbSqlProvider\Expression\Distinct.cs" />
+    <Compile Include="DbSqlProvider\Expression\Exists.cs" />
+    <Compile Include="DbSqlProvider\Expression\ExpFrom.cs" />
+    <Compile Include="DbSqlProvider\Expression\ExpSelect.cs" />
+    <Compile Include="DbSqlProvider\Expression\ExpTree.cs" />
+    <Compile Include="DbSqlProvider\Expression\ExpWhere.cs" />
+    <Compile Include="DbSqlProvider\Expression\From.cs" />
+    <Compile Include="DbSqlProvider\Expression\GroupBy.cs" />
+    <Compile Include="DbSqlProvider\Expression\In.cs" />
+    <Compile Include="DbSqlProvider\Expression\Insert.cs" />
+    <Compile Include="DbSqlProvider\Expression\NotExists.cs" />
+    <Compile Include="DbSqlProvider\Expression\OrderBy.cs" />
+    <Compile Include="DbSqlProvider\Expression\Select.cs" />
+    <Compile Include="DbSqlProvider\Expression\Set.cs" />
+    <Compile Include="DbSqlProvider\Expression\Top.cs" />
+    <Compile Include="DbSqlProvider\Expression\Update.cs" />
+    <Compile Include="DbSqlProvider\Expression\Where.cs" />
+    <Compile Include="DbSqlProvider\Extensions\ExistsExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\FromExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\GroupByExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\InExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\NotExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\OrderByExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\SetExtension.cs" />
+    <Compile Include="DbSqlProvider\Extensions\WhereExtension.cs" />
+    <Compile Include="DbSqlProvider\Models.cs" />
+    <Compile Include="DbSqlProvider\SqlProvider.cs" />
+    <Compile Include="LayerOrm.cs" />
     <Compile Include="DbEntityProvider\EntityContext.cs" />
     <Compile Include="DbEntityProvider\EntityInitializer.cs" />
     <Compile Include="DbEntityProvider\EntityProvider.cs" />
@@ -103,12 +133,9 @@
     <Compile Include="DbAdoProvider\DbConn.cs" />
     <Compile Include="DbAdoProvider\DbProvider.cs" />
     <Compile Include="DbAdoProvider\IDbBulkCopy.cs" />
-    <Compile Include="DbLayer.cs" />
-    <Compile Include="DbRemotingProvider\BaseRemoting.cs" />
-    <Compile Include="DbRemotingProvider\DbRemoting.cs" />
-    <Compile Include="Extension.cs" />
-    <Compile Include="IDbLayer.cs" />
-    <Compile Include="Mapper\EntityMapper.cs" />
+    <Compile Include="LayerAdo.cs" />
+    <Compile Include="DbEntityProvider\Extension.cs" />
+    <Compile Include="DbMapper\EntityMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures.cs">
       <SubType>Code</SubType>
@@ -122,8 +149,10 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="libs\" />
+    <Content Include="libs\IBM.Data.DB2.dll" />
+    <Content Include="libs\Oracle.DataAccess.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

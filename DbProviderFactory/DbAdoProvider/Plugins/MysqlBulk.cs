@@ -11,7 +11,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
 {
     using MySql.Data.MySqlClient;
 
-    public class MysqlBulk:IDisposable
+    internal class MysqlBulk:IDisposable
     {
         MySqlBulkLoader mysqlBulkCopy = null;
         public string ConnectionString { get; private set; }

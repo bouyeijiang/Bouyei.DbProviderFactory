@@ -17,7 +17,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
 {
     using IBM.Data.DB2;
 
-    public class Db2Bulk : IDisposable
+    internal class Db2Bulk : IDisposable
     {
         DB2BulkCopy bulkCopy = null;
         public BulkCopiedArgs BulkCopiedHandler { get; set; }

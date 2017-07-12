@@ -17,7 +17,7 @@ using System.Data.SqlClient;
 
 namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
 {
-    public class SqlBulk:IDisposable
+    internal class SqlBulk:IDisposable
     {
         SqlBulkCopy bulkCopy = null;
         public BulkCopiedArgs BulkCopiedHandler { get; set; }

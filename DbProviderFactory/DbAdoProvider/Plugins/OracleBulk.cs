@@ -17,7 +17,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
 {
     using Oracle.DataAccess.Client;
 
-    public class OracleBulk : IDisposable
+    internal class OracleBulk : IDisposable
     {
         OracleBulkCopy bulkCopy = null;
         public BulkCopiedArgs BulkCopiedHandler { get; set; }
