@@ -20,7 +20,7 @@ namespace DbProviderDemo
             //string connectionString = string.Empty;
 
             ////ado.net demo
-            //DbLayer dbProvider = DbLayer.CreateDbLayer(connectionString);
+            //LayerAdo dbProvider = LayerAdo.CreateLayerAdo(connectionString);
             //var rt = dbProvider.Query(new DbExecuteParameter()
             //{
             //    CommandText = "select * from user"
