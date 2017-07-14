@@ -263,6 +263,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             {
                 path = AppDomain.CurrentDomain.BaseDirectory + invariantName + ".dll";
                 Assembly assem = Assembly.LoadFile(path);
+
                 return new AssemblyFactoryInfo(assem.FullName);
             }
             catch (Exception ex)

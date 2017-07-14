@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 using Bouyei.ProviderFactory;
 
@@ -17,6 +18,12 @@ namespace DbProviderDemo
     {
         static void Main(string[] args) 
         {
+
+            PortableExecutableKinds pEK;
+            ImageFileMachine iFM;
+            Assembly assem = Assembly.LoadFrom("Bouyei.DbProviderFactoryDemo.exe");
+            assem.ManifestModule.GetPEKind(out pEK, out iFM);
+
             //string connectionString = string.Empty;
 
             ////ado.net demo
