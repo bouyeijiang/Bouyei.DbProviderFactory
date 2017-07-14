@@ -15,7 +15,7 @@ namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder(" Set ");
+            StringBuilder builder = new StringBuilder("Set ");
             for (int i = 0; i < keyvalues.Length; ++i)
             {
                 builder.AppendFormat("{0}='{1}'{2}", keyvalues[i].Name, keyvalues[i].Value, (i < keyvalues.Length - 1 ? "," : " "));

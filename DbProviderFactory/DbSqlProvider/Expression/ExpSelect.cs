@@ -20,14 +20,10 @@ namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
 
         public override string ToString()
         {
-            if (Columns == null) return string.Empty;
+            if (Columns == null
+                || Columns.Length==0) return string.Empty;
 
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < Columns.Length; ++i)
-            {
-                builder.AppendFormat("{0}{1}", Columns[i], (i < Columns.Length - 1 ? "," : " "));
-            }
-            return builder.ToString();
+            return string.Join(",", Columns)+" ";
         }
     }
 
@@ -45,14 +41,10 @@ namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
 
         public override string ToString()
         {
-            if (Columns == null) return string.Empty;
+            if (Columns == null
+                || Columns.Length == 0) return string.Empty;
 
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < Columns.Length; ++i)
-            {
-                builder.AppendFormat("{0},{1}", Columns[i], (i < Columns.Length - 1 ? "," : " "));
-            }
-            return builder.ToString();
+            return string.Join(",", Columns)+" ";
         }
     }
 }

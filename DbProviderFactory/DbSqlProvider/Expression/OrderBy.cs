@@ -19,12 +19,7 @@ namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder("Group By ");
-            for (int i = 0; i < Names.Length; ++i)
-            {
-                builder.AppendFormat("{0}{1}", Names[i], (i < Names.Length - 1 ? "," : " Asc "));
-            }
-            return builder.ToString();
+            return "Group By " + string.Join(",", Names) + " Asc ";
         }
 
         /// <summary>

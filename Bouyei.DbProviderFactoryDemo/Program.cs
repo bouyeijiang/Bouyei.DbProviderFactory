@@ -11,18 +11,28 @@ namespace DbProviderDemo
 {
     using Bouyei.ProviderFactory.DbAdoProvider;
     using Bouyei.ProviderFactory.DbEntityProvider;
+    using Bouyei.ProviderFactory.DbSqlProvider;
+    using Bouyei.ProviderFactory.DbSqlProvider.Extensions;
     using Bouyei.ProviderFactory.DbMapper;
     using DbEntities; 
+
+   public class info
+    {
+        public string name { get; set; }
+
+        public string realname { get; set; }
+    }
 
     class Program
     {
         static void Main(string[] args) 
         {
-
-            PortableExecutableKinds pEK;
-            ImageFileMachine iFM;
-            Assembly assem = Assembly.LoadFrom("Bouyei.DbProviderFactoryDemo.exe");
-            assem.ManifestModule.GetPEKind(out pEK, out iFM);
+            var sql = SqlProvider.Singleton.Select("username", "realname", "age")
+                .From("sys_user").Where(new KeyValue()
+                {
+                    Name = "username",
+                    Value = "bouyei"
+                }).SqlString;
 
             //string connectionString = string.Empty;
 
@@ -34,29 +44,20 @@ namespace DbProviderDemo
             //});
 
             //entity framework demo one:
-            LayerOrm efProvider = LayerOrm.CreateLayerOrm("DbConnection");
+            ILayerOrm efProvider = LayerOrm.CreateLayerOrm("DbConnection");
 
             DbProvider dbProvider = new DbProvider("", ProviderType.SqlServer);
 
             try
             {
-                bool rtb = efProvider.NoTrackQuery<User>(x => x.Id == 1).Any();
+                //entity framework demo two:
                 User item = efProvider.GetById<User>(1);
-
-                ////entity framework demo two:
-                //IEntityProvider iEfProvider = EntityProvider.CreateProvider();
-                // var item1 = iEfProvider.Query<User>(x => x.UserName.Contains("admin")).FirstOrDefault();
-
-                //entity mapper
                 User u = new User()
                 {
                     Id=3,
                     Name = "sdfasdf",
                     UserName = "bouyei"
                 };
-
-                //efProvider.Provider.Insert(u);
-                //int rt = efProvider.SaveChanges();
 
                 UserDto ud = new UserDto()
                 {

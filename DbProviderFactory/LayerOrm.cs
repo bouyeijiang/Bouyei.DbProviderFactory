@@ -4,7 +4,7 @@ namespace Bouyei.ProviderFactory
 {
     using DbEntityProvider;
 
-    public class LayerOrm : EntityProvider
+    public class LayerOrm : EntityProvider,ILayerOrm
     {
         public static LayerOrm CreateLayerOrm(string DbConnection = null)
         {

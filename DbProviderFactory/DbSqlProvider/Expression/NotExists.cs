@@ -14,7 +14,7 @@ namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
 
         public override string ToString()
         {
-            return "Not Exists (" + this.value + ")";
+            return "Not Exists (" + this.value + ") ";
         }
     }
 }

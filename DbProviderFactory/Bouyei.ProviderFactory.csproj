@@ -143,6 +143,8 @@
     <Compile Include="DbSqlProvider\Extensions\WhereExtension.cs" />
     <Compile Include="DbSqlProvider\Models.cs" />
     <Compile Include="DbSqlProvider\SqlProvider.cs" />
+    <Compile Include="ILayerAdo.cs" />
+    <Compile Include="ILayerOrm.cs" />
     <Compile Include="LayerOrm.cs" />
     <Compile Include="DbEntityProvider\EntityContext.cs" />
     <Compile Include="DbEntityProvider\EntityInitializer.cs" />

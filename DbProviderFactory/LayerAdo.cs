@@ -5,7 +5,7 @@ namespace Bouyei.ProviderFactory
 {
     using DbAdoProvider;
 
-    public class LayerAdo : DbProvider,IDbProvider
+    public class LayerAdo : DbProvider,ILayerAdo
     {
         public LayerAdo(string ConnectionString,
             ProviderType ProviderType = ProviderType.SqlServer,
