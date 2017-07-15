@@ -98,13 +98,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbEntities\DbEntities.csproj">
+    <ProjectReference Include="..\DbEntities\Bouyei.DbEntities.csproj">
       <Project>{7df8dda5-d22e-442d-b9da-623e2cc30d4a}</Project>
-      <Name>DbEntities</Name>
+      <Name>Bouyei.DbEntities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DbMapping\DbMapping.csproj">
+    <ProjectReference Include="..\DbMapping\Bouyei.DbMapping.csproj">
       <Project>{3323bbb0-4fb3-49ec-ae67-4cae7f47862f}</Project>
-      <Name>DbMapping</Name>
+      <Name>Bouyei.DbMapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbProviderFactory\Bouyei.ProviderFactory.csproj">
       <Project>{e7e05c1e-9623-4180-9ea1-ab851f6213d3}</Project>

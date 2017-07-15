@@ -19,6 +19,10 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
 
         DbSet<TEntity> DbSet<TEntity>() where TEntity : class;
 
+        int Count<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
+
+        bool Any<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity:class;
+
         void Refresh<TEntity>(TEntity entity) where TEntity : class;
 
         TEntity GetById<TEntity>(object id) where TEntity : class;

@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.ProviderFactory", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.DbProviderFactoryDemo", "Bouyei.DbProviderFactoryDemo\Bouyei.DbProviderFactoryDemo.csproj", "{FCBA6F5A-D8F6-4636-95AF-E29C87271672}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbMapping", "DbMapping\DbMapping.csproj", "{3323BBB0-4FB3-49EC-AE67-4CAE7F47862F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.DbMapping", "DbMapping\Bouyei.DbMapping.csproj", "{3323BBB0-4FB3-49EC-AE67-4CAE7F47862F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbEntities", "DbEntities\DbEntities.csproj", "{7DF8DDA5-D22E-442D-B9DA-623E2CC30D4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.DbEntities", "DbEntities\Bouyei.DbEntities.csproj", "{7DF8DDA5-D22E-442D-B9DA-623E2CC30D4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.DbProviderWebDemo", "Bouyei.DbProviderWebDemo\Bouyei.DbProviderWebDemo.csproj", "{317F67A8-9B96-4EA5-983C-3F9E8E6058DD}"
 EndProject

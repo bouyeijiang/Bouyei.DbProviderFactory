@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity.ModelConfiguration;
 
-namespace DbMapping
+namespace Bouyei.DbMapping
 {
     using DbEntities;
     public class UserMapping:EntityTypeConfiguration<User>

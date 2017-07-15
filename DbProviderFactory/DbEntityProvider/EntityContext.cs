@@ -5,19 +5,17 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Configuration;
 using System.Data.Common;
-
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration;
 
 namespace Bouyei.ProviderFactory.DbEntityProvider
 {
     public class EntityContext : DbContext, IDisposable
-    {
-        // private static List<dynamic> EntitiesMapping = new List<dynamic>();
-
+    { 
         public EntityContext(string DbConnection = null)
             : base(string.Format("Name={0}", string.IsNullOrEmpty(DbConnection) ? "DbConnection" : DbConnection))
         {
+            this.Configuration.LazyLoadingEnabled = false;
             this.Database.Initialize(true);
         }
 
@@ -30,6 +28,16 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
         public DbSet<TEntity> DSet<TEntity>() where TEntity : class
         {
             return this.Set<TEntity>();
+        }
+
+        public int Count<TEntity>(Expression<Func<TEntity, bool>> predicate)where TEntity:class
+        {
+            return this.Set<TEntity>().Count(predicate);
+        }
+
+        public bool Any<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        {
+            return this.Set<TEntity>().Any(predicate);
         }
 
         public IQueryable<TEntity> Query<TEntity>() where TEntity : class
@@ -67,7 +75,7 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
 
         public IEnumerable<TEntity> InsertRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
-            return DSet<TEntity>().AddRange(entities);
+            return this.Set<TEntity>().AddRange(entities);
         }
 
         public int ExecuteCommand(string command, params object[] parameters)
@@ -135,7 +143,7 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
             //自定义映射程序集所在位置
             string mappingDLL = ConfigurationManager.AppSettings.Get("mappingDLL");
             if (string.IsNullOrEmpty(mappingDLL))
-                throw new Exception("找不到配置mapping.dll映射文件,如<add key=\"AssemblyPath\" value=\"DbMapping.dll\"/>");
+                throw new Exception("找不到配置mapping.dll映射文件,如<add key=\"mappingDLL\" value=\"DbMapping.dll\"/>");
 
             string path = AppDomain.CurrentDomain.BaseDirectory + mappingDLL;
 
@@ -143,8 +151,8 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
                 || System.IO.File.Exists(path) == false)
                 throw new Exception("找不到mappingDLL配置路径:" + path);
 
-            Assembly assem = Assembly.LoadFile(path);
-
+            Assembly assem = Assembly.LoadFrom(path);
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Configurations.AddFromAssembly(assem);
             base.OnModelCreating(modelBuilder);
         }

@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.ModelConfiguration;
 
-namespace DbEntities
+namespace Bouyei.DbEntities
 {
-    public class User
+    [Table("user")]
+    public class User: EntityTypeConfiguration<User>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

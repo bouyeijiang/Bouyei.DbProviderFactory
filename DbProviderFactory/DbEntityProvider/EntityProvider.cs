@@ -38,6 +38,16 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
             this.eContext.Reload(entity);
 		}
 
+        public int Count<TEntity>(Expression<Func<TEntity, bool>> predicate)where TEntity:class
+        {
+           return this.eContext.Count(predicate);
+        }
+
+        public bool Any<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity:class
+        {
+            return this.eContext.Any(predicate);
+        }
+
         public IQueryable<TEntity> Query<TEntity>() where TEntity : class
         {
             return this.eContext.Query<TEntity>();

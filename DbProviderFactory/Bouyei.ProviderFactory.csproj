@@ -158,9 +158,6 @@
     <Compile Include="DbEntityProvider\Extension.cs" />
     <Compile Include="DbMapper\EntityMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Structures.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UtilIO\CsvHelper.cs" />
   </ItemGroup>
   <ItemGroup>

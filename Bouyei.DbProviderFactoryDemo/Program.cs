@@ -14,7 +14,7 @@ namespace DbProviderDemo
     using Bouyei.ProviderFactory.DbSqlProvider;
     using Bouyei.ProviderFactory.DbSqlProvider.Extensions;
     using Bouyei.ProviderFactory.DbMapper;
-    using DbEntities; 
+    using Bouyei.DbEntities; 
 
    public class info
     {
@@ -45,27 +45,19 @@ namespace DbProviderDemo
 
             //entity framework demo one:
             ILayerOrm efProvider = LayerOrm.CreateLayerOrm("DbConnection");
-
-            DbProvider dbProvider = new DbProvider("", ProviderType.SqlServer);
-
             try
             {
                 //entity framework demo two:
                 User item = efProvider.GetById<User>(1);
-                User u = new User()
-                {
-                    Id=3,
-                    Name = "sdfasdf",
-                    UserName = "bouyei"
-                };
-
                 UserDto ud = new UserDto()
                 {
-                    UserName = "http://aileenyin.com/111"
+                    UserName = "http://aileenyin.com/"
                 };
 
-                //EntityMapper.MapTo<UserDto, User>(ud, item);
-                efProvider.Update(u);
+                var query = efProvider.Query<User>().FirstOrDefault();
+
+                EntityMapper.MapTo<UserDto, User>(ud, item);
+                efProvider.Update(item);
                 int rt = efProvider.SaveChanges();
             }
             catch(Exception ex)

@@ -20,8 +20,7 @@ namespace Bouyei.DbProviderWebDemo
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            LayerOrm orm = LayerOrm.CreateLayerOrm();
-            bool rtb = orm.NoTrackQuery<User>(x => x.Id == 1).Any();
+            Manager.dbProvider= LayerOrm.CreateLayerOrm();
         }
     }
 }
