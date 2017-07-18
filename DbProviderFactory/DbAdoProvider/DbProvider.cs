@@ -14,6 +14,7 @@ using System.Threading;
 
 namespace Bouyei.ProviderFactory.DbAdoProvider
 {
+    using UtilIO;
     /// <summary>
     /// 连接池
     /// </summary>
@@ -24,12 +25,11 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
 
         public string DbConnectionString { get; set; }
         public ProviderType ProviderType { get; set; }
-        public BulkCopiedArgs BulkCopiedHandler { get; set; }
-        public int SyncLockTimeout { get; set; }
+        public int LockTimeout { get; set; }
 
         #endregion
 
-        #region  structure
+        #region  dispose
         ~DbProvider()
         {
             Dispose(false);
@@ -48,6 +48,9 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                 if (this.dbConn != null) this.dbConn.Dispose();
                 if (this.dbDataAdapter != null) this.dbDataAdapter.Dispose();
                 if (this.dbCommand != null) this.dbCommand.Dispose();
+                if (this.dbBulkCopy != null) this.dbBulkCopy.Dispose();
+                if (this.dbCommandBuilder != null) dbCommandBuilder.Dispose();
+                if (this.dbTransaction != null) dbTransaction.Dispose();
             }
         }
 
@@ -72,6 +75,12 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             this.ProviderType = providerType;
         }
 
+        public static DbProvider CreateProvider(string connectionString,
+            ProviderType providerType=ProviderType.SqlServer)
+        {
+            return new DbProvider(connectionString, providerType);
+        }
+
         #endregion
 
         #region public
@@ -79,7 +88,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             this.DbConnectionString = ConnectionString;
@@ -106,7 +115,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -145,7 +154,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -187,7 +196,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -236,7 +245,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -275,7 +284,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -312,7 +321,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -360,7 +369,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -414,7 +423,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -459,7 +468,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -500,7 +509,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -510,7 +519,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                 using (DbBulkCopy bulkCopy = CreateBulkCopy(DbConnectionString, dbExecuteParameter.IsTransaction))
                 {
                     bulkCopy.Open();
-                    bulkCopy.BulkCopiedHandler = BulkCopiedHandler;
+                    bulkCopy.BulkCopiedHandler = dbExecuteParameter.BulkCopiedHandler;
 
                     bulkCopy.BatchSize = dbExecuteParameter.BatchSize;
                     bulkCopy.BulkCopyTimeout = dbExecuteParameter.ExectueTimeout;
@@ -569,7 +578,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try
@@ -592,7 +601,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                             if (reader.HasRows == false)
                                 return new ResultInfo<List<T>, string>(new List<T>(1), string.Empty);
 
-                            var items = reader.GetGenericObjectValues<T>();
+                            var items = reader.GetGenericObjectValues<T>(dbExecuteParameter.IgnoreCase);
 
                             return new ResultInfo<List<T>, string>(items, string.Empty);
                         }
@@ -613,7 +622,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(SyncLockTimeout);
+                Thread.Sleep(LockTimeout);
                 //waiting for lock to do;
             }
             try

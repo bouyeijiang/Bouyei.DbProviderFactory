@@ -106,8 +106,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbAdoProvider\Assembly\DbReflection.cs" />
-    <Compile Include="DbAdoProvider\DataTableHelper.cs" />
+    <Compile Include="UtilIO\DbReflection.cs" />
+    <Compile Include="UtilIO\DataTableHelper.cs" />
     <Compile Include="DbAdoProvider\Entities\Models.cs" />
     <Compile Include="DbAdoProvider\Entities\ProviderType.cs" />
     <Compile Include="DbAdoProvider\IDbProvider.cs" />

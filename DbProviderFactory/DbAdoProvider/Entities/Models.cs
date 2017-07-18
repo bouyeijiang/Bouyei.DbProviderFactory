@@ -129,6 +129,8 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             this.dbProviderParameters = dbProviderParameters;
         }
 
+        public bool IgnoreCase { get; set; }
+
         public string CommandText { get; set; }
 
         private int executeTimeout = 1800;
@@ -193,5 +195,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         public bool IsAutoDispose { get; set; }
 
         public Action<IDbTransaction, int> TransactionCallback { get; set; }
+
+        public BulkCopiedArgs BulkCopiedHandler { get; set; }
     }
 }

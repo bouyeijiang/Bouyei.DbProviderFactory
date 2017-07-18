@@ -14,15 +14,21 @@ using System.Data;
 using System.Reflection;
 using System.ComponentModel;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider
+namespace Bouyei.ProviderFactory.UtilIO
 {
-    public class DataTableHelper
+    public static class DataTableHelper
     {
-        public DataTableHelper()
+        #region public
+        public static T DataReaderTo<T>(this IDataReader dataReader, bool IgnoreCase = false) where T : new()
         {
+            return DbReflection.GetGenericObjectValue<T>((System.Data.Common.DbDataReader)dataReader);
         }
 
-        #region public
+        public static List<T> DataReaderToList<T>(this IDataReader dataReader, bool IgnoreCase = false) where T : new()
+        {
+            return DbReflection.GetGenericObjectValues<T>((System.Data.Common.DbDataReader)dataReader, IgnoreCase);
+        }
+
         /// <summary>
         /// 根据结构体创建DataTable数据集
         /// </summary>

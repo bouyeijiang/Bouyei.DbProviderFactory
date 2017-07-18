@@ -15,25 +15,27 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
 
     public class DbBulkCopy : IDbBulkCopy, IDisposable
     {
-        public BulkCopiedArgs BulkCopiedHandler { get; set; }
+        #region public field
+                public BulkCopiedArgs BulkCopiedHandler { get; set; }
 
-        public string DestinationTableName { get; set; }
+                public string DestinationTableName { get; set; }
 
-        public int BulkCopyTimeout { get; set; }
+                public int BulkCopyTimeout { get; set; }
 
-        public int BatchSize { get; set; }
+                public int BatchSize { get; set; }
 
-        public string ConnectionString { get; private set; }
+                public string ConnectionString { get; private set; }
 
-        public ProviderType ProviderName { get; private set; }
+                public ProviderType ProviderName { get; private set; }
 
-        public BulkCopyOptions DbBulkCopyOption { get; set; }
+                public BulkCopyOptions DbBulkCopyOption { get; set; }
 
-        public bool IsTransaction { get; private set; }
+                public bool IsTransaction { get; private set; }
 
-        public IDbTransaction dbTrans { get; private set; }
+                public IDbTransaction dbTrans { get; private set; }
 
-        public IDbConnection dbConn { get; private set; }
+                public IDbConnection dbConn { get; private set; }
+        #endregion
 
         SqlBulk sqlBulkCopy = null;
         Db2Bulk db2BulkCopy = null;
