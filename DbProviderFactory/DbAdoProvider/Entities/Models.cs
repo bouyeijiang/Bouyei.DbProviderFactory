@@ -198,4 +198,73 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
 
         public BulkCopiedArgs BulkCopiedHandler { get; set; }
     }
+    
+    [Serializable]
+    public class ConnectionConfiguraton
+    {
+        public ProviderType DbType { get; set; }
+
+        public string DbIp { get; set; }
+
+        public int DbPort { get; set; }
+
+        public string DbName { get; set; }
+
+        public string DbUserName { get; set; }
+
+        public string DbPassword { get; set; }
+
+        public string ConnectionString { get; private set; }
+
+        public override string ToString()
+        {
+            switch (DbType)
+            {
+                case ProviderType.SqlServer:
+                    {
+                        if (DbPort <= 0) DbPort = 1433;
+                        ConnectionString = string.Format("Server={0},{1};Database={2};User Id={3};Password={4};",
+                            DbIp, DbPort, DbName, DbUserName, DbPassword);
+                    }
+                    break;
+                case ProviderType.Oracle:
+                case ProviderType.MsOracle:
+                    {
+                        if (DbPort <= 0) DbPort = 1521;
+
+                        if (string.IsNullOrEmpty(DbName))
+                            DbName = "ORCL";
+                        ConnectionString = string.Format("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={0})(PORT={1}))(CONNECT_DATA=(SERVICE_NAME={2})));User Id={3};Password={4};",
+                             DbIp, DbPort, DbName, DbUserName, DbPassword);
+                    }
+                    break;
+                case ProviderType.DB2:
+                    {
+                        if (DbPort <= 0) DbPort = 50000;
+
+                        ConnectionString = string.Format("server={0},{1};database={2};uid={3};pwd={4};",
+                            DbIp, DbPort, DbName, DbUserName, DbPassword);
+                    }
+                    break;
+                case ProviderType.MySql:
+                    {
+                        if (DbPort <= 0) DbPort = 3306;
+                        ConnectionString = string.Format("Data Source={0};port={1};Database={2};User Id={3};Password={4};pooling=false;CharSet=utf8;",
+                          DbIp, DbPort, DbName, DbUserName, DbPassword);
+                    }
+                    break;
+                case ProviderType.SQLite:
+                    ConnectionString = string.Format("Data Source={0};Version=3;Password={1};", DbIp, DbPassword);
+                    break;
+                case ProviderType.Odbc:
+                case ProviderType.OleDb:
+                    ConnectionString = "未定义该连接类型字符串";
+                    break;
+                default:
+                    ConnectionString = "未知连接类型";
+                    break;
+            }
+            return ConnectionString;
+        }
+    }
 }

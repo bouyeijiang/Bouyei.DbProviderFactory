@@ -24,7 +24,9 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         private int signal = 0;
 
         public string DbConnectionString { get; set; }
-        public ProviderType ProviderType { get; set; }
+        
+        public ProviderType DbType { get; set; }
+
         public int LockTimeout { get; set; }
 
         #endregion
@@ -63,7 +65,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             bool isSingleton = false)
             : base(providerType, isSingleton)
         {
-            this.ProviderType = providerType;
+            this.DbType = providerType;
             this.DbConnectionString = connectionString;
         }
 
@@ -72,13 +74,20 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             bool isSingleton = false)
             : base(providerType, isSingleton)
         {
-            this.ProviderType = providerType;
+            this.DbType = providerType;
         }
 
         public static DbProvider CreateProvider(string connectionString,
             ProviderType providerType=ProviderType.SqlServer)
         {
             return new DbProvider(connectionString, providerType);
+        }
+
+        public static DbProvider CreateProvider(
+            ConnectionConfiguraton connectionConfiguration)
+        {
+            return new DbProvider(connectionConfiguration.ToString(),
+                connectionConfiguration.DbType);
         }
 
         #endregion
@@ -673,7 +682,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
         #region private
         private DbParameter CreateParameter(DbProviderParameter dbProviderParameter)
         {
-            switch (ProviderType)
+            switch (DbType)
             {
                 case ProviderType.SqlServer:
                     return new System.Data.SqlClient.SqlParameter()

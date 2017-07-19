@@ -18,7 +18,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
     {
         string DbConnectionString { get; set; }
 
-        ProviderType ProviderType { get; set; }
+        ProviderType DbType { get; set; }
         void Dispose();
         ResultInfo<bool, string> Connect(string connString);
         ResultInfo<DataTable, string> Query(DbExecuteParameter dbExecuteParameter);

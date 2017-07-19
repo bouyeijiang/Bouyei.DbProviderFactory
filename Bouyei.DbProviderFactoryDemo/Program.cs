@@ -10,7 +10,6 @@ using Bouyei.ProviderFactory;
 namespace DbProviderDemo
 {
     using Bouyei.ProviderFactory.DbAdoProvider;
-    using Bouyei.ProviderFactory.DbEntityProvider;
     using Bouyei.ProviderFactory.DbSqlProvider;
     using Bouyei.ProviderFactory.DbSqlProvider.Extensions;
     using Bouyei.ProviderFactory.DbMapper;
@@ -27,6 +26,7 @@ namespace DbProviderDemo
     {
         static void Main(string[] args) 
         {
+            //查询过程生成sql脚本
             var sql = SqlProvider.Singleton.Select("username", "realname", "age")
                 .From("sys_user").Where(new KeyValue()
                 {
@@ -34,20 +34,18 @@ namespace DbProviderDemo
                     Value = "bouyei"
                 }).SqlString;
 
-            //string connectionString = string.Empty;
+            ////ado.net 使用例子
+            string connectionString = string.Empty;
+            LayerAdo dbProvider = LayerAdo.CreateLayerAdo(connectionString);
+            var adort = dbProvider.Query(new DbExecuteParameter()
+            {
+                CommandText = "select * from user"
+            });
 
-            ////ado.net demo
-            //LayerAdo dbProvider = LayerAdo.CreateLayerAdo(connectionString);
-            //var rt = dbProvider.Query(new DbExecuteParameter()
-            //{
-            //    CommandText = "select * from user"
-            //});
-
-            //entity framework demo one:
+            //entity framework 使用例子
             ILayerOrm efProvider = LayerOrm.CreateLayerOrm("DbConnection");
             try
             {
-                //entity framework demo two:
                 User item = efProvider.GetById<User>(1);
                 UserDto ud = new UserDto()
                 {
@@ -56,8 +54,10 @@ namespace DbProviderDemo
 
                 var query = efProvider.Query<User>().FirstOrDefault();
 
+                //对象映射
                 EntityMapper.MapTo<UserDto, User>(ud, item);
                 efProvider.Update(item);
+
                 int rt = efProvider.SaveChanges();
             }
             catch(Exception ex)
