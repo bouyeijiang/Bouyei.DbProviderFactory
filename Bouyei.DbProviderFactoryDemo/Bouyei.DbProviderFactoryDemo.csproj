@@ -106,7 +106,7 @@
       <Project>{3323bbb0-4fb3-49ec-ae67-4cae7f47862f}</Project>
       <Name>Bouyei.DbMapping</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DbProviderFactory\Bouyei.ProviderFactory.csproj">
+    <ProjectReference Include="..\Bouyei.DbProviderFactory\Bouyei.ProviderFactory.csproj">
       <Project>{e7e05c1e-9623-4180-9ea1-ab851f6213d3}</Project>
       <Name>Bouyei.ProviderFactory</Name>
     </ProjectReference>
