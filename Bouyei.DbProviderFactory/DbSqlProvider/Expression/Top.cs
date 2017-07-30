@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
+namespace Bouyei.DbProviderFactory.DbSqlProvider.Expression
 {
    public class Top:ExpTree
     {

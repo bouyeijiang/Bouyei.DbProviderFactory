@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider.Extensions
+namespace Bouyei.DbProviderFactory.DbSqlProvider.Extensions
 {
     using Expression;
    public static class SetExtension

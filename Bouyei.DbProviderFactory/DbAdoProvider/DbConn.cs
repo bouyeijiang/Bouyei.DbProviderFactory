@@ -13,11 +13,11 @@ using System.Data.Common;
 
 using System.Reflection;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider
+namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
      public class DbConn
     {
-        protected DbProviderFactory dbFactory = null;
+        protected System.Data.Common.DbProviderFactory dbFactory = null;
 
         protected DbConnection dbConn = null;
         protected DbDataAdapter dbDataAdapter = null;
@@ -168,7 +168,7 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
             return dbBulkCopy;
         }
 
-        private DbProviderFactory GetDbProviderFactory(string invariantName)
+        private System.Data.Common.DbProviderFactory GetDbProviderFactory(string invariantName)
         {
             if (ExistsDbProviderFactories(invariantName))
                 return DbProviderFactories.GetFactory(invariantName);
@@ -189,12 +189,12 @@ namespace Bouyei.ProviderFactory.DbAdoProvider
                 if (type == null) return null;
 
                 FieldInfo field = type.GetField("Instance", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
-                if (field == null || !field.FieldType.IsSubclassOf(typeof(DbProviderFactory))) return null;
+                if (field == null || !field.FieldType.IsSubclassOf(typeof(System.Data.Common.DbProviderFactory))) return null;
 
                 object obj = field.GetValue(null);
                 if (obj == null) return null;
 
-                return (DbProviderFactory)obj;
+                return (System.Data.Common.DbProviderFactory)obj;
             }
         }
 

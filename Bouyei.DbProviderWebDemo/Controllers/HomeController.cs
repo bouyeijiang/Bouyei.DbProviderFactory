@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Bouyei.DbEntities;
-using Bouyei.ProviderFactory;
+using Bouyei.DbProviderFactory;
 
 namespace Bouyei.DbProviderWebDemo.Controllers
 {

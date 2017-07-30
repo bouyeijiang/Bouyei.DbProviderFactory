@@ -8,7 +8,7 @@ using System.Web.Routing;
 
 namespace Bouyei.DbProviderWebDemo
 {
-    using Bouyei.ProviderFactory;
+    using Bouyei.DbProviderFactory;
     using DbEntities;
 
     public class MvcApplication : System.Web.HttpApplication

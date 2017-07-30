@@ -10,7 +10,7 @@ using System;
 using System.Text;
 using System.Data;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider
+namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
     interface IDbBulkCopy
     {

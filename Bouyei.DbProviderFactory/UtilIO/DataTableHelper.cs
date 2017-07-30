@@ -14,7 +14,7 @@ using System.Data;
 using System.Reflection;
 using System.ComponentModel;
 
-namespace Bouyei.ProviderFactory.UtilIO
+namespace Bouyei.DbProviderFactory.UtilIO
 {
     public static class DataTableHelper
     {

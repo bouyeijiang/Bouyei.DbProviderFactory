@@ -4,11 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Configuration;
-using System.Data.Common;
+//using System.Data.Common;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity;
 
-namespace Bouyei.ProviderFactory.DbEntityProvider
+namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
     public class EntityContext : DbContext, IDisposable
     { 
@@ -89,7 +89,7 @@ namespace Bouyei.ProviderFactory.DbEntityProvider
             if (this.Database.Connection.State != System.Data.ConnectionState.Open)
                 this.Database.Connection.Open();
 
-            using (DbTransaction dbTrans = this.Database.Connection.BeginTransaction(IsolationLevel))
+            using (System.Data.Common.DbTransaction dbTrans = this.Database.Connection.BeginTransaction(IsolationLevel))
             {
                 this.Database.UseTransaction(dbTrans);
                 try

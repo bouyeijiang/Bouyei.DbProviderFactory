@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
+namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 {
     using Oracle.DataAccess.Client;
 

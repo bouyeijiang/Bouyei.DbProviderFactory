@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider
+namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
     public interface IDbProvider
     {

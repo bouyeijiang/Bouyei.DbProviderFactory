@@ -8,7 +8,7 @@
 using System;
 using SysLE = System.Linq.Expressions;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider.Extensions
+namespace Bouyei.DbProviderFactory.DbSqlProvider.Extensions
 {
     using Expression;
    public static class OrderByExtension

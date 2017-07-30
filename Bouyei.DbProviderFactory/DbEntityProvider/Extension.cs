@@ -15,7 +15,7 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 
-namespace Bouyei.ProviderFactory.DbEntityProvider
+namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
     internal static class Extension
     {

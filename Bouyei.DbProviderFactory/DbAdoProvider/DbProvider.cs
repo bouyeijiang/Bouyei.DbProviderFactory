@@ -12,7 +12,7 @@ using System.Data.Common;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider
+namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
     using UtilIO;
     /// <summary>

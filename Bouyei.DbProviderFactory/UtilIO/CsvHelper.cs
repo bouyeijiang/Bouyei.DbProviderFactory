@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 using System.IO;
 
-namespace Bouyei.ProviderFactory.UtilIO
+namespace Bouyei.DbProviderFactory.UtilIO
 {
     public class CsvHelper
     {

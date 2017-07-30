@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
+namespace Bouyei.DbProviderFactory.DbSqlProvider.Expression
 {
     public class GroupBy:ExpTree
     {

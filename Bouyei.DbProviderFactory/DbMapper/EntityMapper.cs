@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Bouyei.ProviderFactory.DbMapper
+namespace Bouyei.DbProviderFactory.DbMapper
 {
     public class EntityMapper
     {

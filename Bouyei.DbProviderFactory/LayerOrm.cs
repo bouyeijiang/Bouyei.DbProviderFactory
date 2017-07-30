@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace Bouyei.ProviderFactory
+namespace Bouyei.DbProviderFactory
 {
     using DbEntityProvider;
 
-    public class LayerOrm : EntityProvider,ILayerOrm
+    public class OrmProvider : EntityProvider,IOrmProvider
     {
-        public static LayerOrm CreateLayerOrm(string DbConnection = null)
+        public static OrmProvider CreateOrmProvider(string DbConnection = null)
         {
-            return new LayerOrm(DbConnection);
+            return new OrmProvider(DbConnection);
         }
 
-        public LayerOrm(string DbConnection = null)
+        public OrmProvider(string DbConnection = null)
             : base(DbConnection)
         { }
     }

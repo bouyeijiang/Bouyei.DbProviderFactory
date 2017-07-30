@@ -7,7 +7,7 @@ using System.Collections.Generic;
 //using System.Collections.Generic;
 //using System.Text;
 
-namespace Bouyei.ProviderFactory.DbEntityProvider
+namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
     public class EntityProvider:IDisposable,IEntityProvider
     {

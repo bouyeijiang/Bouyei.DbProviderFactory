@@ -9,7 +9,7 @@
 using System;
 using System.Data;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider
+namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
     using Plugins;
 

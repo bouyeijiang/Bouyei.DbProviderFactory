@@ -2,7 +2,7 @@
 using System.Text;
 using System.Reflection;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider.Expression
+namespace Bouyei.DbProviderFactory.DbSqlProvider.Expression
 {
   
 

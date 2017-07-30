@@ -7,7 +7,7 @@
 ---------------------------------------------------------------*/
 using System;
 
-namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
+namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 {
     using MySql.Data.MySqlClient;
 

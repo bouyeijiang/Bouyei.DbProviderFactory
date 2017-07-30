@@ -5,7 +5,7 @@ using System.Data.Entity;
 //using System.Linq;
 //using System.Text;
 
-namespace Bouyei.ProviderFactory.DbEntityProvider
+namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
     /// <summary>
     /// 初始化实体数据库

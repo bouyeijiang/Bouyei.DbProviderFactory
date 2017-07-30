@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Collections.Generic;
 //using System.Text;
 
-namespace Bouyei.ProviderFactory.DbEntityProvider
+namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
     public interface IEntityProvider
     {

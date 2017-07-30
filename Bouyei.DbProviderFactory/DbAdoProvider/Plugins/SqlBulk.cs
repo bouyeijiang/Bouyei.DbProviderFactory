@@ -15,7 +15,7 @@ using System.Data;
 using System.Data.SqlClient;
 
 
-namespace Bouyei.ProviderFactory.DbAdoProvider.Plugins
+namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 {
     internal class SqlBulk:IDisposable
     {

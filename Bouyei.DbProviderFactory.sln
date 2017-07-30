@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.ProviderFactory", "Bouyei.DbProviderFactory\Bouyei.ProviderFactory.csproj", "{E7E05C1E-9623-4180-9EA1-AB851F6213D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.DbProviderFactory", "Bouyei.DbProviderFactory\Bouyei.DbProviderFactory.csproj", "{E7E05C1E-9623-4180-9EA1-AB851F6213D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bouyei.DbProviderFactoryDemo", "Bouyei.DbProviderFactoryDemo\Bouyei.DbProviderFactoryDemo.csproj", "{FCBA6F5A-D8F6-4636-95AF-E29C87271672}"
 EndProject

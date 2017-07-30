@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider
+namespace Bouyei.DbProviderFactory.DbSqlProvider
 {
     using Expression;
 

@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Bouyei.ProviderFactory.DbSqlProvider
+namespace Bouyei.DbProviderFactory.DbSqlProvider
 {
     /// <summary>
     /// 排序方式

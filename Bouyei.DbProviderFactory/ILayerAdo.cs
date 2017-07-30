@@ -11,10 +11,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bouyei.ProviderFactory
+namespace Bouyei.DbProviderFactory
 {
     using DbAdoProvider;
-    public interface ILayerAdo:IDbProvider
+    public interface IAdoProvider:IDbProvider
     {
     }
 }

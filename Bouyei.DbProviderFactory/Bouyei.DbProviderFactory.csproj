@@ -7,8 +7,8 @@
     <ProjectGuid>{E7E05C1E-9623-4180-9EA1-AB851F6213D3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bouyei.ProviderFactory</RootNamespace>
-    <AssemblyName>Bouyei.ProviderFactory</AssemblyName>
+    <RootNamespace>Bouyei.DbProviderFactory</RootNamespace>
+    <AssemblyName>Bouyei.DbProviderFactory</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

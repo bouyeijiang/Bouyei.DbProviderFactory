@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Bouyei.ProviderFactory;
+using Bouyei.DbProviderFactory;
 
 namespace Bouyei.DbProviderWebDemo
 {

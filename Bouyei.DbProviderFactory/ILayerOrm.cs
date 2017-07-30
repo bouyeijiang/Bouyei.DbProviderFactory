@@ -11,10 +11,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bouyei.ProviderFactory
+namespace Bouyei.DbProviderFactory
 {
     using DbEntityProvider;
-    public interface ILayerOrm : IEntityProvider
+    public interface IOrmProvider : IEntityProvider
     {
     }
 }

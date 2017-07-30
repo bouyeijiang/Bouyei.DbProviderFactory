@@ -5,28 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 
-using Bouyei.ProviderFactory;
+using Bouyei.DbProviderFactory;
 
 namespace DbProviderDemo
 {
-    using Bouyei.ProviderFactory.DbAdoProvider;
-    using Bouyei.ProviderFactory.DbSqlProvider;
-    using Bouyei.ProviderFactory.DbSqlProvider.Extensions;
-    using Bouyei.ProviderFactory.DbMapper;
+    using Bouyei.DbProviderFactory.DbAdoProvider;
+    using Bouyei.DbProviderFactory.DbSqlProvider;
+    using Bouyei.DbProviderFactory.DbSqlProvider.Extensions;
+    using Bouyei.DbProviderFactory.DbMapper;
     using Bouyei.DbEntities; 
-
-   public class info
-    {
-        public string name { get; set; }
-
-        public string realname { get; set; }
-    }
 
     class Program
     {
         static void Main(string[] args) 
         {
-            //查询过程生成sql脚本
+            //生成简单查询脚本
             var sql = SqlProvider.Singleton.Select("username", "realname", "age")
                 .From("sys_user").Where(new KeyValue()
                 {
@@ -34,31 +27,33 @@ namespace DbProviderDemo
                     Value = "bouyei"
                 }).SqlString;
 
+            //结果:Select username,realname,age From sys_user Where username='bouyei' 
+
             ////ado.net 使用例子
             string connectionString = string.Empty;
-            LayerAdo dbProvider = LayerAdo.CreateLayerAdo(connectionString);
+            AdoProvider dbProvider = AdoProvider.CreateAdoProvider(connectionString);
             var adort = dbProvider.Query(new DbExecuteParameter()
             {
                 CommandText = "select * from user"
             });
 
             //entity framework 使用例子
-            ILayerOrm efProvider = LayerOrm.CreateLayerOrm("DbConnection");
+            IOrmProvider ormProvider = OrmProvider.CreateOrmProvider("DbConnection");
             try
             {
-                User item = efProvider.GetById<User>(1);
+                User item = ormProvider.GetById<User>(1);
                 UserDto ud = new UserDto()
                 {
                     UserName = "http://aileenyin.com/"
                 };
 
-                var query = efProvider.Query<User>().FirstOrDefault();
+                var query = ormProvider.Query<User>().FirstOrDefault();
 
-                //对象映射
+                //使用mapper修改对象
                 EntityMapper.MapTo<UserDto, User>(ud, item);
-                efProvider.Update(item);
-
-                int rt = efProvider.SaveChanges();
+                ormProvider.Update(item);
+                //保存修改
+                int rt = ormProvider.SaveChanges();
             }
             catch(Exception ex)
             {
