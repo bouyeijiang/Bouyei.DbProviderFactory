@@ -143,9 +143,9 @@
     <Compile Include="DbSqlProvider\Extensions\WhereExtension.cs" />
     <Compile Include="DbSqlProvider\Models.cs" />
     <Compile Include="DbSqlProvider\SqlProvider.cs" />
-    <Compile Include="ILayerAdo.cs" />
-    <Compile Include="ILayerOrm.cs" />
-    <Compile Include="LayerOrm.cs" />
+    <Compile Include="IAdoProvider.cs" />
+    <Compile Include="IOrmProvider.cs" />
+    <Compile Include="OrmProvider.cs" />
     <Compile Include="DbEntityProvider\EntityContext.cs" />
     <Compile Include="DbEntityProvider\EntityInitializer.cs" />
     <Compile Include="DbEntityProvider\EntityProvider.cs" />
@@ -154,7 +154,7 @@
     <Compile Include="DbAdoProvider\DbConn.cs" />
     <Compile Include="DbAdoProvider\DbProvider.cs" />
     <Compile Include="DbAdoProvider\IDbBulkCopy.cs" />
-    <Compile Include="LayerAdo.cs" />
+    <Compile Include="AdoProvider.cs" />
     <Compile Include="DbEntityProvider\Extension.cs" />
     <Compile Include="DbMapper\EntityMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
