@@ -227,7 +227,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
-                                return ResultInfo<int, string>.Create(-1, "no data rows");
+                                return ResultInfo<int, string>.Create(0, string.Empty);
 
                             while (reader.Read())
                             {
@@ -535,7 +535,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                     try
                     {
-                        if ((dbExecuteParameter.DstDataTable == null || dbExecuteParameter.DstDataTable.Rows.Count == 0)
+                        if ((dbExecuteParameter.DstDataTable == null 
+                            || dbExecuteParameter.DstDataTable.Rows.Count == 0)
                             && dbExecuteParameter.IDataReader != null)
                         {
                             bulkCopy.WriteToServer(dbExecuteParameter.IDataReader, dbExecuteParameter.DstTableName);
@@ -543,6 +544,9 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                         }
                         else
                         {
+                            if (dbExecuteParameter.BatchSize > dbExecuteParameter.DstDataTable.Rows.Count)
+                                dbExecuteParameter.BatchSize = dbExecuteParameter.DstDataTable.Rows.Count;
+
                             bulkCopy.DestinationTableName = dbExecuteParameter.DstDataTable.TableName;
                             bulkCopy.WriteToServer(dbExecuteParameter.DstDataTable);
                             cnt = dbExecuteParameter.DstDataTable.Rows.Count;
@@ -699,6 +703,28 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 case ProviderType.DB2:
                     return new IBM.Data.DB2.DB2Parameter()
                     {
+                        DbType = dbProviderParameter.DbType,
+                        ParameterName = dbProviderParameter.ParameterName,
+                        Value = dbProviderParameter.Value,
+                        Size = dbProviderParameter.Size,
+                        Direction = dbProviderParameter.Direction,
+                        SourceColumn = dbProviderParameter.SourceColumn,
+                        SourceVersion = dbProviderParameter.SourceVersion,
+                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
+                    };
+                case ProviderType.Oracle:
+                    return new Oracle.DataAccess.Client.OracleParameter() {
+                        DbType = dbProviderParameter.DbType,
+                        ParameterName = dbProviderParameter.ParameterName,
+                        Value = dbProviderParameter.Value,
+                        Size = dbProviderParameter.Size,
+                        Direction = dbProviderParameter.Direction,
+                        SourceColumn = dbProviderParameter.SourceColumn,
+                        SourceVersion = dbProviderParameter.SourceVersion,
+                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
+                    };
+                case ProviderType.MySql:
+                    return new MySql.Data.MySqlClient.MySqlParameter() {
                         DbType = dbProviderParameter.DbType,
                         ParameterName = dbProviderParameter.ParameterName,
                         Value = dbProviderParameter.Value,

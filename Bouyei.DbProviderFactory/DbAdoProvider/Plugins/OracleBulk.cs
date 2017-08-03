@@ -59,7 +59,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
                 bulkCopy.Close();
         }
 
-        private void InitBulkCopy(DataTable dt, int batchSize = 102400)
+        private void InitBulkCopy(DataTable dt, int batchSize = 10240)
         {
             if (bulkCopy.ColumnMappings.Count > 0) bulkCopy.ColumnMappings.Clear();
 
@@ -74,6 +74,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             }
             if (BulkCopiedHandler != null)
             {
+                bulkCopy.NotifyAfter = batchSize;
                 bulkCopy.OracleRowsCopied += bulkCopy_OracleRowsCopied;
             }
         }
@@ -92,6 +93,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
             if (BulkCopiedHandler != null)
             {
+                bulkCopy.NotifyAfter = batchSize;
                 bulkCopy.OracleRowsCopied += bulkCopy_OracleRowsCopied;
             }
         }
@@ -105,6 +107,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
             if (BulkCopiedHandler != null)
             {
+                bulkCopy.NotifyAfter = batchSize;
                 bulkCopy.OracleRowsCopied += bulkCopy_OracleRowsCopied;
             }
         }

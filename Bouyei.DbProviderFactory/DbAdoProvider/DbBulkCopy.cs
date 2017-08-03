@@ -87,7 +87,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     sqlBulkCopy = new SqlBulk(ConnectionString, BulkCopyTimeout, DbBulkCopyOption);
                 }
-                sqlBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
             else if (ProviderName == ProviderType.DB2)
             {
@@ -95,7 +94,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     db2BulkCopy = new Db2Bulk(ConnectionString, BulkCopyTimeout, DbBulkCopyOption);
                 }
-                db2BulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
             else if (ProviderName == ProviderType.Oracle)
             {
@@ -103,7 +101,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     oracleBulkCopy = new OracleBulk(ConnectionString, BulkCopyTimeout, DbBulkCopyOption);
                 }
-                oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
             else if (ProviderName == ProviderType.MySql)
             {
@@ -140,8 +137,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                     dbTrans = dbConn.BeginTransaction();
                 }
                 sqlBulkCopy = new SqlBulk(dbConn, dbTrans, BulkCopyTimeout, DbBulkCopyOption);
-
-                sqlBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
             else if (ProviderName == ProviderType.DB2)
             {
@@ -158,8 +153,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                     dbTrans = dbConn.BeginTransaction();
                 }
                 db2BulkCopy = new Db2Bulk(dbConn, BulkCopyTimeout, DbBulkCopyOption);
-
-                db2BulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
             else if (ProviderName == ProviderType.Oracle)
             {
@@ -177,7 +170,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 }
 
                 oracleBulkCopy = new OracleBulk(dbConn, BulkCopyTimeout, DbBulkCopyOption);
-                oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
             }
             else if (ProviderName == ProviderType.MySql)
             {
@@ -209,14 +201,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         {
             if (ProviderName == ProviderType.SqlServer)
             {
+                sqlBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 sqlBulkCopy.WriteToServer(dataTable, BatchSize);
             }
             else if (ProviderName == ProviderType.DB2)
             {
+                db2BulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 db2BulkCopy.WriteToServer(dataTable);
             }
             else if (ProviderName == ProviderType.Oracle)
             {
+                oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 oracleBulkCopy.WriteToServer(dataTable, BatchSize);
             }
             else if (ProviderName == ProviderType.MySql)
@@ -248,14 +243,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         {
             if (ProviderName == ProviderType.SqlServer)
             {
+                sqlBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 sqlBulkCopy.WriteToServer(dataTable, rowState, BatchSize);
             }
             else if (ProviderName == ProviderType.DB2)
             {
+                db2BulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 db2BulkCopy.WriteToServer(dataTable, rowState);
             }
             else if (ProviderName == ProviderType.Oracle)
             {
+                oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 oracleBulkCopy.WriteToServer(dataTable, rowState, BatchSize);
             }
             else
@@ -268,14 +266,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         {
             if (ProviderName == ProviderType.SqlServer)
             {
+                sqlBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 sqlBulkCopy.WriteToServer(dstTableName, iDataReader, this.BatchSize);
             }
             else if (ProviderName == ProviderType.DB2)
             {
+                db2BulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 db2BulkCopy.WriteToServer(dstTableName, iDataReader);
             }
             else if (ProviderName == ProviderType.Oracle)
             {
+                oracleBulkCopy.BulkCopiedHandler = BulkCopiedHandler;
                 oracleBulkCopy.WriteToServer(dstTableName, iDataReader, BatchSize);
             }
             else

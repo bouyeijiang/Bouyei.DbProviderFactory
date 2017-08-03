@@ -26,7 +26,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
         public string ConnectionString { get; private set; }
 
-        public Db2Bulk(string ConnectionString, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+        public Db2Bulk(string ConnectionString, int timeout = 1800,
+            BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
@@ -34,7 +35,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             bulkCopy.BulkCopyTimeout = timeout;
         }
 
-        public Db2Bulk(IDbConnection dbConnection, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+        public Db2Bulk(IDbConnection dbConnection, int timeout = 1800, 
+            BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
@@ -59,7 +61,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
                 bulkCopy.Close();
         }
 
-        private void InitBulkCopy(DataTable dt)
+        private void InitBulkCopy(DataTable dt,int batchSize)
         {
             if (bulkCopy.ColumnMappings.Count > 0) bulkCopy.ColumnMappings.Clear();
 
@@ -73,11 +75,12 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             }
             if (BulkCopiedHandler != null)
             {
+                bulkCopy.NotifyAfter = batchSize; 
                 bulkCopy.DB2RowsCopied += bulkCopy_DB2RowsCopied;
             }
         }
 
-        private void InitBulkCopy(string tableName, string[] columnNames)
+        private void InitBulkCopy(string tableName, string[] columnNames, int batchSize)
         {
             if (bulkCopy.ColumnMappings.Count > 0) bulkCopy.ColumnMappings.Clear();
 
@@ -90,11 +93,12 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
             if (BulkCopiedHandler != null)
             {
+                bulkCopy.NotifyAfter = batchSize;
                 bulkCopy.DB2RowsCopied += bulkCopy_DB2RowsCopied;
             }
         }
 
-        private void InitBulkCopy(string tableName)
+        private void InitBulkCopy(string tableName, int batchSize)
         {
             if (bulkCopy.ColumnMappings.Count > 0) bulkCopy.ColumnMappings.Clear();
 
@@ -102,6 +106,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
             if (BulkCopiedHandler != null)
             {
+                bulkCopy.NotifyAfter = batchSize;
                 bulkCopy.DB2RowsCopied += bulkCopy_DB2RowsCopied;
             }
         }
@@ -114,9 +119,9 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             }
         }
 
-        public void WriteToServer(DataTable dt)
+        public void WriteToServer(DataTable dt,int batchSize=10240)
         {
-            InitBulkCopy(dt);
+            InitBulkCopy(dt, batchSize);
             bulkCopy.WriteToServer(dt);
 
             if (bulkCopy.Errors.Count > 0)
@@ -125,27 +130,27 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             }
         }
 
-        public void WriteToServer(string tableName, IDataReader iDataReader)
+        public void WriteToServer(string tableName, IDataReader iDataReader, int batchSize = 10240)
         {
             string[] columnNames = new string[iDataReader.FieldCount];
             for (int i = 0; i < columnNames.Length; ++i)
             {
                 columnNames[i] = iDataReader.GetName(i);
             }
-            InitBulkCopy(tableName, columnNames);
+            InitBulkCopy(tableName, columnNames, batchSize);
             bulkCopy.WriteToServer(iDataReader);
         }
 
-        public void WriteToServer(string tableName, DataRow[] rows)
+        public void WriteToServer(string tableName, DataRow[] rows, int batchSize = 10240)
         {
-            InitBulkCopy(tableName);
+            InitBulkCopy(tableName, batchSize);
 
             bulkCopy.WriteToServer(rows);
         }
 
-        public void WriteToServer(DataTable dt, DataRowState rowState)
+        public void WriteToServer(DataTable dt, DataRowState rowState, int batchSize = 10240)
         {
-            InitBulkCopy(dt);
+            InitBulkCopy(dt, batchSize);
             bulkCopy.WriteToServer(dt, rowState);
 
             if (bulkCopy.Errors.Count > 0)
@@ -154,9 +159,9 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             }
         }
 
-        public void WriteToServer(DataRow[] rows)
+        public void WriteToServer(DataRow[] rows,int batchSize=10240)
         {
-            InitBulkCopy(rows[0].Table);
+            InitBulkCopy(rows[0].Table, batchSize);
             bulkCopy.WriteToServer(rows);
 
             if (bulkCopy.Errors.Count > 0)
