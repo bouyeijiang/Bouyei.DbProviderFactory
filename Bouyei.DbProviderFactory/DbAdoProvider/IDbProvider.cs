@@ -24,10 +24,10 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         ResultInfo<DataTable, string> Query(DbExecuteParameter dbExecuteParameter);
         ResultInfo<List<T>, string> Query<T>(DbExecuteParameter dbExecuteParameter) where T : new();
         ResultInfo<DataSet, string> QueryToSet(DbExecuteParameter dbExecuteParameter);
-
-        ResultInfo<int, string> QueryToReader(DbExecuteParameter dbExecuteParameter, Action<IDataReader> rowAction);
+        ResultInfo<int, string> QueryTo<T>(DbExecuteParameter dbExecuteParameter, Func<T, bool> rowAction) where T : new();
+        ResultInfo<int, string> QueryToReader(DbExecuteParameter dbExecuteParameter, Func<IDataReader,bool> rowAction);
         ResultInfo<IDataReader, string> QueryToReader(DbExecuteParameter dbExecuteParameter);
-        ResultInfo<int, string> QueryChanged(DbExecuteParameter dbExecuteParameter, Action<DataTable> action);
+        ResultInfo<int, string> QueryChanged(DbExecuteParameter dbExecuteParameter, Func<DataTable,bool> action);
         ResultInfo<int, string> QueryToTable(DbExecuteParameter dbExecuteParameter, DataTable dstTable);
         ResultInfo<int, string> ExecuteCmd(DbExecuteParameter dbExecuteParameter);
 

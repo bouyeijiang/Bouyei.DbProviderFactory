@@ -28,9 +28,6 @@ namespace Bouyei.DbProviderFactory.UtilIO
                     object attrValue = reader[pi.Name];
                     if (attrValue == null || attrValue == DBNull.Value) continue;
 
-                    var mi = pi.GetSetMethod();
-                    if (mi == null) continue;
-
                     pi.SetValue(value, attrValue, null);
                 }
             }

@@ -207,7 +207,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             else if (ProviderName == ProviderType.DB2)
             {
                 db2BulkCopy.BulkCopiedHandler = BulkCopiedHandler;
-                db2BulkCopy.WriteToServer(dataTable);
+                db2BulkCopy.WriteToServer(dataTable,BatchSize);
             }
             else if (ProviderName == ProviderType.Oracle)
             {

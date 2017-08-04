@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-
+using System.Data;
 using Bouyei.DbProviderFactory;
+using System.Configuration;
 
 namespace DbProviderDemo
 {
@@ -30,12 +31,16 @@ namespace DbProviderDemo
             //结果:Select username,realname,age From sys_user Where username='bouyei' 
 
             ////ado.net 使用例子
-            string connectionString = string.Empty;
+            string connectionString = ConfigurationManager.ConnectionStrings["DbConnection"].ConnectionString;
             AdoProvider dbProvider = AdoProvider.CreateAdoProvider(connectionString);
             var adort = dbProvider.Query(new DbExecuteParameter()
             {
-                CommandText = "select * from user"
+                CommandText = "select * from [user]"
             });
+
+
+            DataTable dt = new DataTable();
+            var qrt= dbProvider.QueryToTable(new DbExecuteParameter("select * from [user]"), dt);
 
             //entity framework 使用例子
             IOrmProvider ormProvider = OrmProvider.CreateOrmProvider("DbConnection");

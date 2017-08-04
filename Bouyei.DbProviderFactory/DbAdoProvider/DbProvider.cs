@@ -201,7 +201,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
         }
 
-        public ResultInfo<int, string> QueryToReader(DbExecuteParameter dbExecuteParameter, Action<IDataReader> rowAction)
+        public ResultInfo<int, string> QueryToReader(DbExecuteParameter dbExecuteParameter, Func<IDataReader,bool> rowAction)
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
@@ -228,10 +228,65 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                         {
                             if (reader.HasRows == false)
                                 return ResultInfo<int, string>.Create(0, string.Empty);
+                            bool isContinue = false;
 
                             while (reader.Read())
                             {
-                                rowAction(reader);
+                                isContinue = rowAction(reader);
+                                if (isContinue == false) break;
+                                ++rows;
+                            }
+                        }
+                    }
+                }
+
+                return ResultInfo<int, string>.Create<int, string>(rows, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return new ResultInfo<int, string>(-1, ex.ToString());
+            }
+            finally
+            {
+                Interlocked.Exchange(ref signal, 0);
+            }
+        }
+
+        public ResultInfo<int,string> QueryTo<T>(DbExecuteParameter dbExecuteParameter,Func<T,bool> rowAction)
+             where T:new()
+        {
+            while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
+            {
+                Thread.Sleep(LockTimeout);
+                //waiting for lock to do;
+            }
+            try
+            {
+                int rows = 0;
+                using (DbConnection conn = CreateConnection(DbConnectionString))
+                {
+                    if (conn.State != ConnectionState.Open) conn.Open();
+
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn))
+                    {
+                        if (dbExecuteParameter.dbProviderParameters != null)
+                        {
+                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
+                            {
+                                cmd.Parameters.Add(CreateParameter(param));
+                            }
+                        }
+                        using (DbDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows == false)
+                                return ResultInfo<int, string>.Create(0, string.Empty);
+                            bool isContinue = false;
+
+                            while (reader.Read())
+                            {
+                                T row = reader.DataReaderTo<T>(dbExecuteParameter.IgnoreCase);
+                                isContinue = rowAction(row);
+                                if (isContinue == false) break;
                                 ++rows;
                             }
                         }
@@ -350,10 +405,13 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                             }
                         }
 
-                        using (DbDataReader datareader = cmd.ExecuteReader())
+                        using (DbDataReader dReader = cmd.ExecuteReader())
                         {
-                            dstTable.Load(datareader);
-                            return new ResultInfo<int, string>(datareader.RecordsAffected, string.Empty);
+                            int oCnt = dstTable.Rows.Count;
+
+                            dstTable.Load(dReader);
+
+                            return new ResultInfo<int, string>(dstTable.Rows.Count - oCnt, string.Empty);
                         }
                     }
                 }
@@ -631,7 +689,13 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
         }
 
-        public ResultInfo<int, string> QueryChanged(DbExecuteParameter dbExecuteParameter, Action<DataTable> action)
+        /// <summary>
+        /// Fun<DataTable,bool>回调方法返回false则中断执行直接返回
+        /// </summary>
+        /// <param name="dbExecuteParameter"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public ResultInfo<int, string> QueryChanged(DbExecuteParameter dbExecuteParameter, Func<DataTable,bool> action)
         {
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
@@ -653,7 +717,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                         if (dt.Rows.Count == 0) return new ResultInfo<int, string>(-1, "无可更新的数据行");
 
-                        action(dt);
+                       bool isContinue= action(dt);
+                       if (isContinue == false) return new ResultInfo<int, string>(0, string.Empty);
 
                         DataTable changedt = dt.GetChanges(DataRowState.Added | DataRowState.Deleted | DataRowState.Modified);
                         if (changedt != null && changedt.Rows.Count > 0)
