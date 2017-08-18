@@ -26,15 +26,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
         public string ConnectionString { get; private set; }
 
-        public OracleBulk(string ConnectionString, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+        public OracleBulk(string ConnectionString, int timeout = 1800, 
+            BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
-            bulkCopy = new OracleBulkCopy(ConnectionString, (OracleBulkCopyOptions)option);
+            bulkCopy = CreatedBulkCopy(option);
             bulkCopy.BulkCopyTimeout = timeout;
         }
 
-        public OracleBulk(IDbConnection dbConnection, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+        public OracleBulk(IDbConnection dbConnection, int timeout = 1800,
+            BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
@@ -42,6 +44,20 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             bulkCopy = new OracleBulkCopy(oracleConnection, (OracleBulkCopyOptions)option);
             bulkCopy.BulkCopyTimeout = timeout;
         }
+        private OracleBulkCopy CreatedBulkCopy(BulkCopyOptions option)
+        {
+            if (option == BulkCopyOptions.Default)
+            {
+                return new OracleBulkCopy(ConnectionString, OracleBulkCopyOptions.Default);
+            }
+            else if (option == BulkCopyOptions.UseInternalTransaction)
+            {
+                return new OracleBulkCopy(ConnectionString, OracleBulkCopyOptions.UseInternalTransaction);
+            }
+            else return new OracleBulkCopy(ConnectionString);
+        }
+
+
 
         public void Dispose()
         {

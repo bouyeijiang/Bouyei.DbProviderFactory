@@ -138,7 +138,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             return dbCommand;
         }
 
-        protected DbTransaction BeginTransaction(DbConnection dbConn, IsolationLevel isolationLevel = IsolationLevel.Serializable)
+        protected DbTransaction BeginTransaction(DbConnection dbConn, IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
             dbTransaction = dbConn.BeginTransaction(isolationLevel);
             return dbTransaction;
@@ -146,24 +146,12 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         protected DbBulkCopy CreateBulkCopy(string ConnectionString, bool isTransaction = false)
         {
-            //if (IsSingleton)
-            //{
-            //    if (dbBulkCopy == null)
-            //    {
-            //        if (isTransaction)
-            //            dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString, CreateConnection(ConnectionString));
-            //        else dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString);
-            //    }
-            //}
-            //else
-            //{
             if (dbBulkCopy != null) dbBulkCopy.Dispose();
 
             if (isTransaction)
                 dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString, CreateConnection(ConnectionString));
             else
                 dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString);
-            //}
 
             return dbBulkCopy;
         }

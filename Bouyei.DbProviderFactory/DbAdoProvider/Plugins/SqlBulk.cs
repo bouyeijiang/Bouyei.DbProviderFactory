@@ -26,17 +26,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
         public string ConnectionString { get; private set; }
 
-        public SqlBulk(string ConnectionString, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+        public SqlBulk(string ConnectionString, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
 
-            bulkCopy = new SqlBulkCopy(ConnectionString, (SqlBulkCopyOptions)option);
+            bulkCopy = CreatedBulkCopy(option);
             bulkCopy.BulkCopyTimeout = timeout;
         }
 
         public SqlBulk(IDbConnection dbConnection, IDbTransaction dbTrans = null,
-            int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+            int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
@@ -46,6 +46,18 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             else bulkCopy = new SqlBulkCopy(connection, (SqlBulkCopyOptions)option, (SqlTransaction)dbTrans);
 
             bulkCopy.BulkCopyTimeout = timeout;
+        }
+
+        private SqlBulkCopy CreatedBulkCopy(BulkCopyOptions option)
+        {
+            if (option == BulkCopyOptions.None)
+            {
+                return new SqlBulkCopy(ConnectionString);
+            }
+            else
+            {
+                return new SqlBulkCopy(ConnectionString, (SqlBulkCopyOptions)option);
+            }
         }
 
         public void Dispose()

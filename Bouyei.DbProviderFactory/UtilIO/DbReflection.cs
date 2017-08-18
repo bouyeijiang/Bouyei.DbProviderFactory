@@ -21,35 +21,20 @@ namespace Bouyei.DbProviderFactory.UtilIO
             T value = new T();
 
             PropertyInfo[] pinfos = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            if (ignoreCase == false)
-            {
-                foreach (var pi in pinfos)
-                {
-                    object attrValue = reader[pi.Name];
-                    if (attrValue == null || attrValue == DBNull.Value) continue;
 
-                    pi.SetValue(value, attrValue, null);
-                }
-            }
-            else
+            foreach (var pi in pinfos)
             {
-                foreach (var pi in pinfos)
+                for (int i = 0; i < reader.FieldCount; ++i)
                 {
-                    string fieldColName = pi.Name.ToLower();
-
-                    for (int i = 0; i < reader.FieldCount; ++i)
+                    if (NameEqual(pi.Name, reader.GetName(i), ignoreCase))
                     {
-                        string dbColName = reader.GetName(i);
-                        if (dbColName.ToLower() == fieldColName)
-                        {
-                            object attrValue = reader.GetValue(i);
+                        object attrValue = reader.GetValue(i);
 
-                            if (attrValue == null || attrValue == DBNull.Value)
-                                continue;
+                        if (attrValue == null || attrValue == DBNull.Value)
+                            continue;
 
-                            pi.SetValue(value, attrValue, null);
-                            break;
-                        }
+                        pi.SetValue(value, attrValue, null);
+                        break;
                     }
                 }
             }
@@ -62,49 +47,45 @@ namespace Bouyei.DbProviderFactory.UtilIO
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static List<T> GetGenericObjectValues<T>(this DbDataReader  reader, bool ignoreCase = false) where T : new()
+        public static List<T> GetGenericObjectValues<T>(this DbDataReader reader, bool ignoreCase = false) where T : new()
         {
-            List<T> items = new List<T>(64);
+            List<T> items = new List<T>(16);
             PropertyInfo[] pinfos = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             while (reader.Read())
             {
                 T value = new T();
-                if (ignoreCase == false)
-                {
-                    foreach (var pi in pinfos)
-                    {
-                        object attrValue = reader[pi.Name];
-                        if (attrValue == null || attrValue == DBNull.Value) continue;
 
-                        pi.SetValue(value, attrValue, null);
-                    }
-                }
-                else
+                foreach (var pi in pinfos)
                 {
-                    foreach (var pi in pinfos)
+                    for (int i = 0; i < reader.FieldCount; ++i)
                     {
-                        string fieldColName = pi.Name.ToLower();
-
-                        for (int i = 0; i < reader.FieldCount; ++i)
+                        if (NameEqual(pi.Name, reader.GetName(i), ignoreCase))
                         {
-                            string dbColName = reader.GetName(i);
-                            if (dbColName.ToLower() == fieldColName)
-                            {
-                                object attrValue = reader.GetValue(i);
+                            object attrValue = reader.GetValue(i);
 
-                                if (attrValue == null || attrValue == DBNull.Value)
-                                    continue;
+                            if (attrValue == null || attrValue == DBNull.Value)
+                                continue;
 
-                                pi.SetValue(value, attrValue, null);
-                                break;
-                            }
+                            pi.SetValue(value, attrValue, null);
                         }
                     }
                 }
                 items.Add(value);
             }
             return items;
+        }
+
+        private static bool NameEqual(string srcName, string dstName, bool ignoreCase)
+        {
+            if (ignoreCase)
+            {
+                return srcName.ToLower().Equals(dstName.ToLower());
+            }
+            else
+            {
+                return srcName.Equals(dstName);
+            }
         }
     }
 }

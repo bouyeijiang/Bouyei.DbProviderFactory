@@ -21,11 +21,11 @@ namespace Bouyei.DbProviderFactory.DbMapper
             var psFrom = typeof(FromEntity).GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var pFrom in psFrom)
             {
-                var vFrom = pFrom.GetValue(from);
-                if (vFrom == null) continue;
-
                 var pTo = tTo.GetProperty(pFrom.Name);
                 if (pTo == null) continue;
+
+                var vFrom = pFrom.GetValue(from);
+                if (vFrom == null) continue;
 
                 var pToType = pTo.PropertyType;
                 object vTo = null;

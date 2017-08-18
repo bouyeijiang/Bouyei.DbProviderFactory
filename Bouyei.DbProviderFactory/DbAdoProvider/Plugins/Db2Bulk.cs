@@ -27,22 +27,35 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
         public string ConnectionString { get; private set; }
 
         public Db2Bulk(string ConnectionString, int timeout = 1800,
-            BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+            BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
-            bulkCopy = new DB2BulkCopy(ConnectionString, (DB2BulkCopyOptions)option);
+            bulkCopy = CreatedBulkCopy(option);
             bulkCopy.BulkCopyTimeout = timeout;
         }
 
         public Db2Bulk(IDbConnection dbConnection, int timeout = 1800, 
-            BulkCopyOptions option = BulkCopyOptions.InternalTransaction)
+            BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
             DB2Connection oracleConnection = (DB2Connection)dbConnection;
             bulkCopy = new DB2BulkCopy(oracleConnection, (DB2BulkCopyOptions)option);
             bulkCopy.BulkCopyTimeout = timeout;
+        }
+        private DB2BulkCopy CreatedBulkCopy(BulkCopyOptions option)
+        {
+            if (option == BulkCopyOptions.Default ||
+                option == BulkCopyOptions.KeepIdentity)
+            {
+                return new DB2BulkCopy(ConnectionString, (DB2BulkCopyOptions)option);
+            }
+            else if (option == BulkCopyOptions.TableLock)
+            {
+                return new DB2BulkCopy(ConnectionString, DB2BulkCopyOptions.TableLock);
+            }
+            else return new DB2BulkCopy(ConnectionString);
         }
 
         public void Dispose()

@@ -32,7 +32,34 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
     [Flags]
     public enum BulkCopyOptions
     {
+        None = -1,
+        // 摘要: 
+        //     对所有选项使用默认值。
         Default = 0,
-        InternalTransaction = 1
+        //
+        // 摘要: 
+        //     保留源标识值。 如果未指定，则由目标分配标识值。
+        KeepIdentity = 1,
+        //
+        // 摘要: 
+        //     请在插入数据的同时检查约束。 默认情况下，不检查约束。
+        CheckConstraints = 2,
+        //
+        // 摘要: 
+        //     在批量复制操作期间获取批量更新锁。 如果未指定，则使用行锁。
+        TableLock = 4,
+        //
+        // 摘要: 
+        //     保留目标表中的空值，而不管默认值的设置如何。 如果未指定，则空值将由默认值替换（如果适用）。
+        KeepNulls = 8,
+        //
+        // 摘要: 
+        //     指定后，会导致服务器为插入到数据库中的行激发插入触发器。
+        FireTriggers = 16,
+        //
+        // 摘要: 
+        //     如果已指定，则每一批批量复制操作将在事务中发生。 如果指示了此选项，并且为构造函数提供了 System.Data.SqlClient.SqlTransaction
+        //     对象，则发生 System.ArgumentException。
+        UseInternalTransaction = 32,
     }
 }

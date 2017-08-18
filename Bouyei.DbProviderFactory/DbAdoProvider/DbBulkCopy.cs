@@ -74,7 +74,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             string connectionString,
             int bulkcopyTimeout = 1800,
             int batchSize = 102400,
-            BulkCopyOptions dbBulkCopyOption = BulkCopyOptions.Default)
+            BulkCopyOptions dbBulkCopyOption = BulkCopyOptions.KeepIdentity)
             : this(providerType, connectionString)
         {
             this.BatchSize = batchSize;
@@ -113,7 +113,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             IDbConnection dbConnection,
             int bulkcopyTimeout = 1800,
             int batchSize = 102400,
-            BulkCopyOptions dbBulkCopyOption = BulkCopyOptions.Default,
+            BulkCopyOptions dbBulkCopyOption = BulkCopyOptions.KeepIdentity,
             bool isTransaction = true)
             : this(providerType, connectionString)
         {
