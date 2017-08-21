@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,9 +47,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bouyei.ProviderFactory, Version=1.4.6405.333, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bouyei.ProviderFactory.1.4.6405.333\lib\Bouyei.ProviderFactory.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -208,6 +206,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bouyei.DbProviderFactory\Bouyei.DbProviderFactory.csproj">
+      <Project>{e7e05c1e-9623-4180-9ea1-ab851f6213d3}</Project>
+      <Name>Bouyei.DbProviderFactory</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbEntities\Bouyei.DbEntities.csproj">
       <Project>{7df8dda5-d22e-442d-b9da-623e2cc30d4a}</Project>
       <Name>Bouyei.DbEntities</Name>

@@ -23,9 +23,9 @@ namespace Bouyei.DbProviderFactory.DbEntityProvider
             eContext = new EntityContext(DbConnection);
         }
 
-        public EntityProvider(EntityContext eContext)
+        public void DatabaseCreateOrMigrate()
         {
-            this.eContext = eContext;
+            eContext.CreateOrMigrateDb();
         }
 
         public DbSet<TEntity> DbSet<TEntity>() where TEntity : class
@@ -72,32 +72,37 @@ namespace Bouyei.DbProviderFactory.DbEntityProvider
             return  this.DbSet<TEntity>().Find(id);
         }
 
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : class
+        public TEntity Insert<TEntity>(TEntity entity, bool isSaveChange = false) where TEntity : class
         {
-			return this.eContext.Insert<TEntity>(entity);
+			return this.eContext.Insert<TEntity>(entity, isSaveChange);
 		}
 
-        public IEnumerable<TEntity> InsertRange<TEntity>(TEntity[] entities) where TEntity:class
+        public IEnumerable<TEntity> InsertRange<TEntity>(TEntity[] entities, bool isSaveChange = false) where TEntity:class
         {
-           return this.eContext.InsertRange<TEntity>(entities);
+           return this.eContext.InsertRange<TEntity>(entities, isSaveChange);
         }
 
-        public void Update<TEntity>(TEntity entity) where TEntity : class
+        public long BulkCopyWrite<TEntity>(IList<TEntity> buffer,int batchSize=10240) where TEntity : class
         {
-            this.eContext.Update(entity);
+            return this.eContext.BulkCopyWrite<TEntity>(buffer,batchSize);
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : class
+        public void Update<TEntity>(TEntity entity, bool isSaveChange = false) where TEntity : class
         {
-            this.eContext.Delete(entity);
+            this.eContext.Update(entity, isSaveChange);
         }
 
-        public IEnumerable<TEntity> Delete<TEntity>(Func<TEntity, bool> predicate) where TEntity : class
+        public void Delete<TEntity>(TEntity entity, bool isSaveChange = false) where TEntity : class
+        {
+            this.eContext.Delete(entity, isSaveChange);
+        }
+
+        public IEnumerable<TEntity> Delete<TEntity>(Func<TEntity, bool> predicate, bool isSaveChange = false) where TEntity : class
         {
             var items = this.eContext.DSet<TEntity>().Where(predicate);
             foreach (var item in items)
             {
-                this.eContext.Delete(item);
+                this.eContext.Delete(item,isSaveChange);
             }
 
             return items;

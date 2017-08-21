@@ -8,6 +8,6 @@ namespace Bouyei.DbProviderWebDemo
 {
     public class Manager
     {
-        public static ILayerOrm dbProvider { get; set; }
+        public static IOrmProvider dbProvider { get; set; }
     }
 }

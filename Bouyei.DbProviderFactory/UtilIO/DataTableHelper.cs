@@ -72,7 +72,7 @@ namespace Bouyei.DbProviderFactory.UtilIO
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static DataTable ConvertTo<T>(IList<T> list)
+        public static DataTable ConvertTo<T>(this IList<T> list)
         {
             PropertyDescriptorCollection properties = null;
             DataTable table = CreateTable<T>(out properties);
@@ -95,7 +95,7 @@ namespace Bouyei.DbProviderFactory.UtilIO
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
         /// <returns></returns>
-        public static List<T> ConvertTo<T>(DataTable table)
+        public static List<T> ConvertTo<T>(this DataTable table)
         {
             List<T> list = new List<T>(table.Rows.Count);
             Type type = typeof(T);

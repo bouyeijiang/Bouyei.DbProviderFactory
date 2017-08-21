@@ -4,19 +4,30 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Configuration;
+using System.Data.SqlClient;
 //using System.Data.Common;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity;
 
 namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
-    public class EntityContext : DbContext, IDisposable
+    using UtilIO;
+
+    internal class EntityContext : DbContext, IDisposable
     { 
         public EntityContext(string DbConnection = null)
             : base(string.Format("Name={0}", string.IsNullOrEmpty(DbConnection) ? "DbConnection" : DbConnection))
         {
             this.Configuration.LazyLoadingEnabled = false;
-            this.Database.Initialize(true);
+            this.Database.Initialize(false);
+        }
+
+        public void CreateOrMigrateDb()
+        {
+            DbInitialize init = new DbInitialize(this.Database.Connection.ConnectionString);
+            init.InitializeDatabase(this);
+
+            Database.SetInitializer(init);
         }
 
         public void Reload<TEntity>(TEntity entity) where TEntity : class
@@ -50,32 +61,105 @@ namespace Bouyei.DbProviderFactory.DbEntityProvider
             return DSet<TEntity>().Where(predicate);
         }
 
-        public void Update<TEntity>(TEntity entity) where TEntity : class
+        public TEntity Update<TEntity>(TEntity entity,bool isSaveChange=false) where TEntity : class
         {
             if (EnsureChange<TEntity>(entity) > 0)
             {
                 DSet<TEntity>().Attach(entity);
                 this.Entry<TEntity>(entity).State = EntityState.Modified;
+                if (isSaveChange)
+                {
+                   int rt= SaveChanges();
+                    if (rt > 0) return entity;
+                    else return default(TEntity);
+                }
             }
+            return default(TEntity);
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : class
+        public TEntity Delete<TEntity>(TEntity entity, bool isSaveChange = false) where TEntity : class
         {
             this.Set<TEntity>().Attach(entity);
             DSet<TEntity>().Remove(entity);
             this.Entry<TEntity>(entity).State = EntityState.Deleted;
+            if (isSaveChange)
+            {
+                int rt = SaveChanges();
+                if (rt > 0) return entity;
+                else return default(TEntity);
+            }
+            return entity;
         }
 
-        public TEntity Insert<TEntity>(TEntity entity) where TEntity : class
+        public int Delete<TEntity>(Expression<Func<TEntity, bool>> predicate, bool isSaveChange = false) where TEntity : class
+        {
+            var items = this.Set<TEntity>().Where(predicate);
+            int c = 0;
+            foreach (var item in items)
+            {
+                Delete(item);
+                ++c;
+            }
+
+            if (isSaveChange)
+            {
+                if (c > 0) return SaveChanges();
+                else return c;
+            }
+            else return c;
+        }
+
+        public TEntity Insert<TEntity>(TEntity entity, bool isSaveChange=false) where TEntity : class
         {
             TEntity rentity = this.Set<TEntity>().Add(entity);
             this.Entry<TEntity>(entity).State = EntityState.Added;
+            if (isSaveChange)
+            {
+                int rt = SaveChanges();
+                if (rt > 0) return entity;
+                else return default(TEntity);
+            }
             return rentity;
         }
 
-        public IEnumerable<TEntity> InsertRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
+        public IEnumerable<TEntity> InsertRange<TEntity>(IEnumerable<TEntity> entities, bool isSaveChange = false) where TEntity : class
         {
-            return this.Set<TEntity>().AddRange(entities);
+            var items = this.Set<TEntity>().AddRange(entities);
+            if (isSaveChange)
+            {
+                int rt = SaveChanges();
+                if (rt > 0) return items;
+                else return null;
+            }
+            return items;
+        }
+
+        public long BulkCopyWrite<TEntity>(IList<TEntity> collection, int batchSize = 10240) where TEntity : class
+        {
+            System.Data.DataTable dt = collection.ConvertTo();
+            if (dt.Rows.Count == 0) return 0;
+
+            if (this.Database.Connection.State != System.Data.ConnectionState.Open)
+                this.Database.Connection.Open();
+
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy((SqlConnection)this.Database.Connection))
+            {
+                foreach (System.Data.DataColumn col in dt.Columns)
+                    bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
+
+                if (batchSize > dt.Rows.Count)
+                    bulkCopy.BatchSize = dt.Rows.Count;
+                else bulkCopy.BatchSize = batchSize;
+
+                long copiedRows = 0;
+                bulkCopy.SqlRowsCopied += (object sender, SqlRowsCopiedEventArgs e) =>
+                {
+                    copiedRows += e.RowsCopied;
+                };
+                bulkCopy.WriteToServer(dt);
+
+                return copiedRows;
+            }
         }
 
         public int ExecuteCommand(string command, params object[] parameters)

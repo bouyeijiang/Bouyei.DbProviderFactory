@@ -10,7 +10,7 @@ namespace Bouyei.DbProviderWebDemo.Controllers
 {
     public class HomeController : Controller
     {
-        private ILayerOrm dbProvider = null;
+        private IOrmProvider dbProvider = null;
         public HomeController()
         {
             dbProvider = Manager.dbProvider;

@@ -20,7 +20,7 @@ namespace Bouyei.DbProviderWebDemo
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Manager.dbProvider= LayerOrm.CreateLayerOrm();
+            Manager.dbProvider=OrmProvider.CreateOrmProvider();
         }
     }
 }
