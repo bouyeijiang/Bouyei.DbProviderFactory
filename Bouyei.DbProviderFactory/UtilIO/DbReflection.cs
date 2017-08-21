@@ -68,6 +68,7 @@ namespace Bouyei.DbProviderFactory.UtilIO
                                 continue;
 
                             pi.SetValue(value, attrValue, null);
+                            break;
                         }
                     }
                 }
