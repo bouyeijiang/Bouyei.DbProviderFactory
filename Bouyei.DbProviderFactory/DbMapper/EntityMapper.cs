@@ -34,6 +34,10 @@ namespace Bouyei.DbProviderFactory.DbMapper
                 {
                     vTo = Convert.ChangeType(vFrom, pToType.GetGenericArguments()[0]);
                 }
+                else if (pToType.IsEnum)
+                {
+                    vTo = Enum.ToObject(pToType, vFrom);
+                }
                 else
                 {
                     vTo = Convert.ChangeType(vFrom, pTo.PropertyType);
@@ -61,6 +65,10 @@ namespace Bouyei.DbProviderFactory.DbMapper
                 if (pToType.IsGenericType && pToType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     vTo = Convert.ChangeType(vFrom, pToType.GetGenericArguments()[0]);
+                }
+                else if (pToType.IsEnum)
+                {
+                    vTo = Enum.ToObject(pToType, vFrom);
                 }
                 else
                 {
@@ -110,7 +118,10 @@ namespace Bouyei.DbProviderFactory.DbMapper
                 {
                     vTo = Convert.ChangeType(vFrom, pTo.PropertyType);
                 }
-
+                else if (pToType.IsEnum)
+                {
+                    vTo = Enum.ToObject(pToType, vFrom);
+                }
                 if (filterType == FilterType.NullIgnore
                     && vTo == null) continue;
 

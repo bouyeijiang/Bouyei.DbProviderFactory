@@ -32,7 +32,7 @@ namespace DbProviderDemo
 
             ////ado.net 使用例子
             string connectionString = ConfigurationManager.ConnectionStrings["DbConnection"].ConnectionString;
-            AdoProvider dbProvider = AdoProvider.CreateAdoProvider(connectionString);
+            AdoProvider dbProvider = AdoProvider.CreateAdoProvider(connectionString,ProviderType.SqlServer);
             var adort = dbProvider.Query(new DbExecuteParameter()
             {
                 CommandText = "select * from [user]"
