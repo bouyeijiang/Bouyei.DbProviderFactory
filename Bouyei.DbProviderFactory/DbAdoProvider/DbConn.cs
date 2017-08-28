@@ -116,7 +116,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             return dbCommandBuilder;
         }
 
-        protected DbCommand CreateCommand(string CommandText, DbConnection dbConn, DbTransaction dbTrans = null, int Timeout = 1800)
+        protected DbCommand CreateCommand(DbExecuteParameter dbParameter,
+            DbConnection dbConn, DbTransaction dbTrans = null)
         {
             if (IsSingleton)
             {
@@ -128,13 +129,21 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 if (dbCommand != null) dbCommand.Dispose();
                 dbCommand = dbFactory.CreateCommand();
             }
-            if (dbTrans != null)
-            {
-                dbCommand.Transaction = dbTrans;
-            }
+            if (dbTrans != null) dbCommand.Transaction = dbTrans;
+            if (dbParameter.IsStoredProcedure) dbCommand.CommandType = CommandType.StoredProcedure; 
+            
             dbCommand.Connection = dbConn;
-            dbCommand.CommandText = CommandText;
-            dbCommand.CommandTimeout = Timeout;
+            dbCommand.CommandText = dbParameter.CommandText;
+            dbCommand.CommandTimeout = dbParameter.ExectueTimeout;
+
+            if (dbParameter.dbProviderParameters != null)
+            {
+                foreach (DbProviderParameter param in dbParameter.dbProviderParameters)
+                {
+                    dbCommand.Parameters.Add(param);
+                }
+            }
+
             return dbCommand;
         }
 

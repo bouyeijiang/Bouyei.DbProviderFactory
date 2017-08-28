@@ -9,6 +9,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -133,20 +134,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
+                    DataTable dt = new DataTable();
+
                     using (DbDataAdapter adapter = this.CreateAdapter())
                     {
-                        adapter.SelectCommand = this.CreateCommand(dbExecuteParameter.CommandText, conn, null, dbExecuteParameter.ExectueTimeout);
-                        if (dbExecuteParameter.dbProviderParameters != null)
+                        using (DbCommand cmd = this.CreateCommand(dbExecuteParameter, conn))
                         {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                adapter.SelectCommand.Parameters.Add(CreateParameter(param));
-                            }
+                            adapter.SelectCommand = cmd;
+                            adapter.Fill(dt);
                         }
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-                        return new ResultInfo<DataTable, string>(dt, string.Empty);
                     }
+                    return new ResultInfo<DataTable, string>(dt, string.Empty);
                 }
             }
             catch (Exception ex)
@@ -172,23 +170,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
+                    DataSet dt = new DataSet();
+
                     using (DbDataAdapter adapter = CreateAdapter())
                     {
-                        adapter.SelectCommand = CreateCommand(dbExecuteParameter.CommandText, conn,
-                            null, dbExecuteParameter.ExectueTimeout);
-
-                        if (dbExecuteParameter.dbProviderParameters != null)
+                        using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                         {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                adapter.SelectCommand.Parameters.Add(CreateParameter(param));
-                            }
+                            adapter.SelectCommand = cmd;
+                            adapter.Fill(dt);
                         }
-
-                        DataSet dt = new DataSet();
-                        adapter.Fill(dt);
-                        return new ResultInfo<DataSet, string>(dt, string.Empty);
                     }
+                    return new ResultInfo<DataSet, string>(dt, string.Empty);
                 }
             }
             catch (Exception ex)
@@ -215,15 +207,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn))
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                     {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
@@ -267,21 +252,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn))
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                     {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
                                 return ResultInfo<int, string>.Create(0, string.Empty);
-                            bool isContinue = false;
 
+                            bool isContinue = false;
                             while (reader.Read())
                             {
                                 T row = reader.DataReaderTo<T>(dbExecuteParameter.IgnoreCase);
@@ -318,19 +296,10 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn);
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                     {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
                         IDataReader reader = cmd.ExecuteReader();
-                        {
-                            return ResultInfo<IDataReader, string>.Create(reader, string.Empty);
-                        }
+                        return ResultInfo<IDataReader, string>.Create(reader, string.Empty);
                     }
                 }
             }
@@ -356,18 +325,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 using (DbConnection conn = CreateConnection(DbConnectionString))
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn,
-                        null, dbExecuteParameter.ExectueTimeout))
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                     {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
                         int rt = cmd.ExecuteNonQuery();
-                        return new ResultInfo<int, string>(rt, string.Empty);
+
+                        var rValue = GetReturnParameter(cmd);
+
+                        return new ResultInfo<int, string>(rt, 
+                            rValue == null ? string.Empty : rValue.ToString());
                     }
                 }
             }
@@ -394,17 +359,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn,
-                        null, dbExecuteParameter.ExectueTimeout))
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn ))
                     {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
-
                         using (DbDataReader dReader = cmd.ExecuteReader())
                         {
                             int oCnt = dstTable.Rows.Count;
@@ -448,18 +404,15 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                     {
                         try
                         {
-                            using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn, tran, dbExecuteParameter.ExectueTimeout))
+                            using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn, tran))
                             {
-                                if (dbExecuteParameter.dbProviderParameters != null)
-                                {
-                                    foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                                    {
-                                        cmd.Parameters.Add(param);
-                                    }
-                                }
                                 int rt = cmd.ExecuteNonQuery();
                                 tran.Commit();
-                                return new ResultInfo<int, string>(rt, string.Empty);
+
+                                var rValue = GetReturnParameter(cmd);
+
+                                return new ResultInfo<int, string>(rt, 
+                                    rValue != null ? rValue.ToString() : string.Empty);
                             }
                         }
                         catch (Exception ex)
@@ -505,12 +458,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                             int rows = 0;
                             for (int i = 0; i < CommandTexts.Length; ++i)
                             {
-                                using (DbCommand cmd = CreateCommand(CommandTexts[i], conn, tran, timeout))
+                                using (DbCommand cmd = CreateCommand(new DbExecuteParameter()
+                                {
+                                    CommandText = CommandTexts[i],
+                                    ExectueTimeout = timeout
+                                }, conn, tran))
                                 {
                                     rows += cmd.ExecuteNonQuery();
                                 }
                             }
                             tran.Commit();
+
                             return new ResultInfo<int, string>(rows, string.Empty);
                         }
                         catch (Exception ex)
@@ -543,22 +501,15 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 using (DbConnection conn = CreateConnection(DbConnectionString))
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn,
-                        null, dbExecuteParameter.ExectueTimeout))
-                    {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
 
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
+                    {
                         object obj = cmd.ExecuteScalar();
-                        if (obj == null)
-                            return new ResultInfo<T, string>(default(T), string.Empty);
-                        return
-                            new ResultInfo<T, string>((T)obj, string.Empty);
+
+                        var rValue = GetReturnParameter(cmd);
+
+                        return new ResultInfo<T, string>(obj == null ? default(T) : (T)obj,
+                          rValue == null ? string.Empty : rValue.ToString());
                     }
                 }
             }
@@ -658,15 +609,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter.CommandText, conn))
+                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                     {
-                        if (dbExecuteParameter.dbProviderParameters != null)
-                        {
-                            foreach (DbProviderParameter param in dbExecuteParameter.dbProviderParameters)
-                            {
-                                cmd.Parameters.Add(CreateParameter(param));
-                            }
-                        }
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
@@ -710,29 +654,31 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                     using (DbDataAdapter adapter = this.CreateAdapter())
                     {
-                        adapter.SelectCommand = this.CreateCommand(dbExecuteParameter.CommandText, conn);
-                        adapter.SelectCommand.CommandTimeout = dbExecuteParameter.ExectueTimeout;
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-
-                        if (dt.Rows.Count == 0) return new ResultInfo<int, string>(-1, "无可更新的数据行");
-
-                       bool isContinue= action(dt);
-                       if (isContinue == false) return new ResultInfo<int, string>(0, string.Empty);
-
-                        DataTable changedt = dt.GetChanges(DataRowState.Added | DataRowState.Deleted | DataRowState.Modified);
-                        if (changedt != null && changedt.Rows.Count > 0)
+                        using (DbCommand cmd = this.CreateCommand(dbExecuteParameter, conn))
                         {
-                            using (DbCommandBuilder dbBuilder = this.CreateCommandBuilder())
+                            DataTable dt = new DataTable();
+                            adapter.SelectCommand = cmd;
+                            adapter.Fill(dt);
+
+                            if (dt.Rows.Count == 0) return new ResultInfo<int, string>(-1, "无可更新的数据行");
+
+                            bool isContinue = action(dt);
+                            if (isContinue == false) return new ResultInfo<int, string>(0, string.Empty);
+
+                            DataTable changedt = dt.GetChanges(DataRowState.Added | DataRowState.Deleted | DataRowState.Modified);
+                            if (changedt != null && changedt.Rows.Count > 0)
                             {
-                                dbBuilder.DataAdapter = adapter;
-                                int rt = adapter.Update(changedt);
-                                return new ResultInfo<int, string>(rt, string.Empty);
+                                using (DbCommandBuilder dbBuilder = this.CreateCommandBuilder())
+                                {
+                                    dbBuilder.DataAdapter = adapter;
+                                    int rt = adapter.Update(changedt);
+                                    return new ResultInfo<int, string>(rt, string.Empty);
+                                }
                             }
-                        }
-                        else
-                        {
-                            return new ResultInfo<int, string>(-1, "无变更的数据行");
+                            else
+                            {
+                                return new ResultInfo<int, string>(-1, "无变更的数据行");
+                            }
                         }
                     }
                 }
@@ -802,6 +748,22 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 default:
                     return dbProviderParameter;
             }
+        }
+
+        private object GetReturnParameter(DbCommand cmd)
+        {
+            if (cmd.Parameters != null && cmd.Parameters.Count > 0)
+            {
+                for(int i = 0; i < cmd.Parameters.Count; ++i)
+                {
+                    if (cmd.Parameters[i].Direction != ParameterDirection.Input)
+                    {
+                        return cmd.Parameters[i].Value;
+                    }
+                }
+            }
+
+            return null;
         }
         #endregion
     }

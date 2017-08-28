@@ -112,7 +112,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
     {
         public DbExecuteParameter(int ExecuteTimeout)
         {
-            this.executeTimeout = ExecuteTimeout;
+            this.ExectueTimeout = ExecuteTimeout;
         }
 
         public DbExecuteParameter(params DbProviderParameter[] dbProviderParameters)
@@ -125,20 +125,28 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             DbProviderParameter[] dbProviderParameters = null)
         {
             this.CommandText = CommandText;
-            this.executeTimeout = ExectueTimeout;
+            this.ExectueTimeout = ExectueTimeout;
             this.dbProviderParameters = dbProviderParameters;
         }
-
+        /// <summary>
+        /// 查询映射对象名忽略大小写
+        /// </summary>
         public bool IgnoreCase { get; set; }
-
+        /// <summary>
+        /// 执行脚本的语句
+        /// </summary>
         public string CommandText { get; set; }
-
-        private int executeTimeout = 1800;
+        /// <summary>
+        /// 脚本是否为存储过程
+        /// </summary>
+        public bool IsStoredProcedure { get; set; }
         /// <summary>
         /// 超时默认值,1800s
         /// </summary>
-        public int ExectueTimeout { get { return executeTimeout; } set { executeTimeout = value; } }
-
+        public int ExectueTimeout { get; set; }
+        /// <summary>
+        /// 指定脚本的传入参数
+        /// </summary>
         public DbProviderParameter[] dbProviderParameters { get; set; }
     }
 
