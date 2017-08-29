@@ -296,7 +296,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
+                    DbCommand cmd = CreateCommand(dbExecuteParameter, conn);
                     {
                         IDataReader reader = cmd.ExecuteReader();
                         return ResultInfo<IDataReader, string>.Create(reader, string.Empty);
@@ -695,60 +695,6 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         #endregion
 
         #region private
-        private DbParameter CreateParameter(DbProviderParameter dbProviderParameter)
-        {
-            switch (DbType)
-            {
-                case ProviderType.SqlServer:
-                    return new System.Data.SqlClient.SqlParameter()
-                    {
-                        DbType = dbProviderParameter.DbType,
-                        ParameterName = dbProviderParameter.ParameterName,
-                        Value = dbProviderParameter.Value,
-                        Size = dbProviderParameter.Size,
-                        Direction = dbProviderParameter.Direction,
-                        SourceColumn = dbProviderParameter.SourceColumn,
-                        SourceVersion = dbProviderParameter.SourceVersion,
-                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
-                    };
-                case ProviderType.DB2:
-                    return new IBM.Data.DB2.DB2Parameter()
-                    {
-                        DbType = dbProviderParameter.DbType,
-                        ParameterName = dbProviderParameter.ParameterName,
-                        Value = dbProviderParameter.Value,
-                        Size = dbProviderParameter.Size,
-                        Direction = dbProviderParameter.Direction,
-                        SourceColumn = dbProviderParameter.SourceColumn,
-                        SourceVersion = dbProviderParameter.SourceVersion,
-                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
-                    };
-                case ProviderType.Oracle:
-                    return new Oracle.DataAccess.Client.OracleParameter() {
-                        DbType = dbProviderParameter.DbType,
-                        ParameterName = dbProviderParameter.ParameterName,
-                        Value = dbProviderParameter.Value,
-                        Size = dbProviderParameter.Size,
-                        Direction = dbProviderParameter.Direction,
-                        SourceColumn = dbProviderParameter.SourceColumn,
-                        SourceVersion = dbProviderParameter.SourceVersion,
-                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
-                    };
-                case ProviderType.MySql:
-                    return new MySql.Data.MySqlClient.MySqlParameter() {
-                        DbType = dbProviderParameter.DbType,
-                        ParameterName = dbProviderParameter.ParameterName,
-                        Value = dbProviderParameter.Value,
-                        Size = dbProviderParameter.Size,
-                        Direction = dbProviderParameter.Direction,
-                        SourceColumn = dbProviderParameter.SourceColumn,
-                        SourceVersion = dbProviderParameter.SourceVersion,
-                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
-                    };
-                default:
-                    return dbProviderParameter;
-            }
-        }
 
         private object GetReturnParameter(DbCommand cmd)
         {

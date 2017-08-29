@@ -140,7 +140,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             {
                 foreach (DbProviderParameter param in dbParameter.dbProviderParameters)
                 {
-                    dbCommand.Parameters.Add(param);
+                    dbCommand.Parameters.Add(CreateParameter(param));
                 }
             }
 
@@ -152,6 +152,64 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             dbTransaction = dbConn.BeginTransaction(isolationLevel);
             return dbTransaction;
         }
+
+        protected DbParameter CreateParameter(DbProviderParameter dbProviderParameter)
+        {
+            switch (DbProviderType)
+            {
+                case ProviderType.SqlServer:
+                    return new System.Data.SqlClient.SqlParameter()
+                    {
+                        DbType = dbProviderParameter.DbType,
+                        ParameterName = dbProviderParameter.ParameterName,
+                        Value = dbProviderParameter.Value,
+                        Size = dbProviderParameter.Size,
+                        Direction = dbProviderParameter.Direction,
+                        SourceColumn = dbProviderParameter.SourceColumn,
+                        SourceVersion = dbProviderParameter.SourceVersion,
+                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
+                    };
+                case ProviderType.DB2:
+                    return new IBM.Data.DB2.DB2Parameter()
+                    {
+                        DbType = dbProviderParameter.DbType,
+                        ParameterName = dbProviderParameter.ParameterName,
+                        Value = dbProviderParameter.Value,
+                        Size = dbProviderParameter.Size,
+                        Direction = dbProviderParameter.Direction,
+                        SourceColumn = dbProviderParameter.SourceColumn,
+                        SourceVersion = dbProviderParameter.SourceVersion,
+                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
+                    };
+                case ProviderType.Oracle:
+                    return new Oracle.DataAccess.Client.OracleParameter()
+                    {
+                        DbType = dbProviderParameter.DbType,
+                        ParameterName = dbProviderParameter.ParameterName,
+                        Value = dbProviderParameter.Value,
+                        Size = dbProviderParameter.Size,
+                        Direction = dbProviderParameter.Direction,
+                        SourceColumn = dbProviderParameter.SourceColumn,
+                        SourceVersion = dbProviderParameter.SourceVersion,
+                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
+                    };
+                case ProviderType.MySql:
+                    return new MySql.Data.MySqlClient.MySqlParameter()
+                    {
+                        DbType = dbProviderParameter.DbType,
+                        ParameterName = dbProviderParameter.ParameterName,
+                        Value = dbProviderParameter.Value,
+                        Size = dbProviderParameter.Size,
+                        Direction = dbProviderParameter.Direction,
+                        SourceColumn = dbProviderParameter.SourceColumn,
+                        SourceVersion = dbProviderParameter.SourceVersion,
+                        SourceColumnNullMapping = dbProviderParameter.SourceColumnNullMapping
+                    };
+                default:
+                    return dbProviderParameter;
+            }
+        }
+
 
         protected DbBulkCopy CreateBulkCopy(string ConnectionString, bool isTransaction = false)
         {
