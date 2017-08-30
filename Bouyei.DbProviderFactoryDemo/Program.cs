@@ -21,7 +21,9 @@ namespace DbProviderDemo
         static void Main(string[] args) 
         {
             //生成简单查询脚本
-            var sql = SqlProvider.Singleton.Select("username", "realname", "age")
+            var sqlProvider = SqlProvider.CreateProvider();
+
+            var sql = sqlProvider.Select("username", "realname", "age")
                 .From("sys_user").Where(new KeyValue()
                 {
                     Name = "username",
@@ -32,7 +34,7 @@ namespace DbProviderDemo
 
             ////ado.net 使用例子
             string connectionString = ConfigurationManager.ConnectionStrings["DbConnection"].ConnectionString;
-            AdoProvider dbProvider = AdoProvider.CreateAdoProvider(connectionString,ProviderType.SqlServer);
+            AdoProvider dbProvider = AdoProvider.CreateProvider(connectionString,ProviderType.SqlServer);
             var adort = dbProvider.Query(new DbExecuteParameter()
             {
                 CommandText = "select * from [user]"
@@ -43,7 +45,7 @@ namespace DbProviderDemo
             var qrt= dbProvider.QueryToTable(new DbExecuteParameter("select * from [user]"), dt);
 
             //entity framework 使用例子
-            IOrmProvider ormProvider = OrmProvider.CreateOrmProvider("DbConnection");
+            IOrmProvider ormProvider = OrmProvider.CreateProvider("DbConnection");
             try
             {
                 User item = ormProvider.GetById<User>(1);

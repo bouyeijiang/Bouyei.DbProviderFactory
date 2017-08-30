@@ -21,21 +21,9 @@ namespace Bouyei.DbProviderFactory.DbSqlProvider
         {
         }
 
-        public static SqlProvider Create()
+        public static SqlProvider CreateProvider()
         {
             return new SqlProvider();
-        }
-
-        class instance
-        {
-            internal static SqlProvider provider = new SqlProvider();
-            static instance()
-            { }
-        }
-
-        public static SqlProvider Singleton
-        {
-            get { return instance.provider; }
         }
 
         public Select Select(params string[] columns)

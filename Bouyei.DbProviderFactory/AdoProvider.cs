@@ -14,7 +14,7 @@ namespace Bouyei.DbProviderFactory
         {
         }
 
-        public static AdoProvider CreateAdoProvider(string ConnectionString,
+        public static AdoProvider CreateProvider(string ConnectionString,
             ProviderType providerType=ProviderType.SqlServer, 
             bool IsSingleton = false)
         {
