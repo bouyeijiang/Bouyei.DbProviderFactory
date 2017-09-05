@@ -14,12 +14,11 @@ using System.Data;
 
 namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
-    public interface IDbProvider
+    public interface IDbProvider: IDisposable
     {
         string DbConnectionString { get; set; }
 
         ProviderType DbType { get; set; }
-        void Dispose();
         ResultInfo<bool, string> Connect(string connString);
         ResultInfo<DataTable, string> Query(DbExecuteParameter dbExecuteParameter);
         ResultInfo<List<T>, string> Query<T>(DbExecuteParameter dbExecuteParameter) where T : new();

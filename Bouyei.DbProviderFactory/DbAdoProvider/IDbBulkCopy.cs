@@ -12,7 +12,7 @@ using System.Data;
 
 namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
-    interface IDbBulkCopy
+    interface IDbBulkCopy: IDisposable
     {
         void WriteToServer(DataTable dataTable);
 

@@ -89,7 +89,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize; 
-                bulkCopy.DB2RowsCopied += bulkCopy_DB2RowsCopied;
+                bulkCopy.DB2RowsCopied += BulkCopy_DB2RowsCopied;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.DB2RowsCopied += bulkCopy_DB2RowsCopied;
+                bulkCopy.DB2RowsCopied += BulkCopy_DB2RowsCopied;
             }
         }
 
@@ -120,11 +120,11 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.DB2RowsCopied += bulkCopy_DB2RowsCopied;
+                bulkCopy.DB2RowsCopied += BulkCopy_DB2RowsCopied;
             }
         }
 
-        void bulkCopy_DB2RowsCopied(object sender, DB2RowsCopiedEventArgs e)
+        void BulkCopy_DB2RowsCopied(object sender, DB2RowsCopiedEventArgs e)
         {
             if (BulkCopiedHandler != null)
             {

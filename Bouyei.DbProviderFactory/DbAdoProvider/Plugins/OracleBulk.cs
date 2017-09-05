@@ -91,7 +91,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.OracleRowsCopied += bulkCopy_OracleRowsCopied;
+                bulkCopy.OracleRowsCopied += BulkCopy_OracleRowsCopied;
             }
         }
 
@@ -110,7 +110,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.OracleRowsCopied += bulkCopy_OracleRowsCopied;
+                bulkCopy.OracleRowsCopied += BulkCopy_OracleRowsCopied;
             }
         }
 
@@ -124,7 +124,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.OracleRowsCopied += bulkCopy_OracleRowsCopied;
+                bulkCopy.OracleRowsCopied += BulkCopy_OracleRowsCopied;
             }
         }
 
@@ -151,7 +151,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             bulkCopy.WriteToServer(rows);
         }
 
-        void bulkCopy_OracleRowsCopied(object sender, OracleRowsCopiedEventArgs eventArgs)
+        void BulkCopy_OracleRowsCopied(object sender, OracleRowsCopiedEventArgs eventArgs)
         {
             if (BulkCopiedHandler != null)
             {

@@ -19,7 +19,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
     /// <summary>
     /// 连接池
     /// </summary>
-    public class DbProvider : DbConn, IDbProvider, IDisposable
+    public class DbProvider : DbConn, IDbProvider
     {
         #region variable
         private int signal = 0;
@@ -331,7 +331,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                         var rValue = GetReturnParameter(cmd);
 
-                        return new ResultInfo<int, string>(rt, 
+                        return new ResultInfo<int, string>(rt < 0 ? 0 : rt,
                             rValue == null ? string.Empty : rValue.ToString());
                     }
                 }
@@ -411,7 +411,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                                 var rValue = GetReturnParameter(cmd);
 
-                                return new ResultInfo<int, string>(rt, 
+                                return new ResultInfo<int, string>(rt < 0 ? 0 : rt,
                                     rValue != null ? rValue.ToString() : string.Empty);
                             }
                         }
@@ -469,7 +469,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                             }
                             tran.Commit();
 
-                            return new ResultInfo<int, string>(rows, string.Empty);
+                            return new ResultInfo<int, string>(rows < 0 ? 0 : rows, string.Empty);
                         }
                         catch (Exception ex)
                         {
@@ -677,7 +677,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                             }
                             else
                             {
-                                return new ResultInfo<int, string>(-1, "无变更的数据行");
+                                return new ResultInfo<int, string>(0, string.Empty);
                             }
                         }
                     }

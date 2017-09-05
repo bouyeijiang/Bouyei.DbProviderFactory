@@ -26,7 +26,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
         public string ConnectionString { get; private set; }
 
-        public SqlBulk(string ConnectionString, int timeout = 1800, BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
+        public SqlBulk(string ConnectionString, int timeout = 1800, 
+            BulkCopyOptions option = BulkCopyOptions.KeepIdentity)
         {
             this.Option = option;
             this.ConnectionString = ConnectionString;
@@ -91,7 +92,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.SqlRowsCopied += bulkCopy_SqlRowsCopied;
+                bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
             }
         }
 
@@ -110,7 +111,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.SqlRowsCopied += bulkCopy_SqlRowsCopied;
+                bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
             }
         }
 
@@ -124,11 +125,11 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             if (BulkCopiedHandler != null)
             {
                 bulkCopy.NotifyAfter = batchSize;
-                bulkCopy.SqlRowsCopied += bulkCopy_SqlRowsCopied;
+                bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
             }
         }
 
-        void bulkCopy_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
+        void BulkCopy_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
         {
             if (BulkCopiedHandler != null)
             {

@@ -13,7 +13,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
     using Plugins;
 
-    public class DbBulkCopy : IDbBulkCopy, IDisposable
+    public class DbBulkCopy : IDbBulkCopy
     {
         #region public field
                 public BulkCopiedArgs BulkCopiedHandler { get; set; }
