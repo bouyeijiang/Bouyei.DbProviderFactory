@@ -38,7 +38,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             this.Info = Info;
         }
 
-        public static ResultInfo<R, I> Create<R, I>(R Result, I Info)
+        public static ResultInfo<R, I> Create(R Result, I Info)
         {
             return new ResultInfo<R, I>(Result, Info);
         }

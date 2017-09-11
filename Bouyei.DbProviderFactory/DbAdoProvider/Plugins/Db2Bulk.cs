@@ -20,6 +20,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
     internal class Db2Bulk : IDisposable
     {
         DB2BulkCopy bulkCopy = null;
+        bool disposed = false;
+
         public BulkCopiedArgs BulkCopiedHandler { get; set; }
 
         public BulkCopyOptions Option { get; private set; }
@@ -58,14 +60,25 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             else return new DB2BulkCopy(ConnectionString);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+
+            if (disposing)
+            {
+                if (bulkCopy != null)
+                {
+                    bulkCopy.Close();
+                    bulkCopy = null;
+                }
+            }
+            disposed = true;
+        }
+
         public void Dispose()
         {
-            if (bulkCopy != null)
-            {
-                bulkCopy.Close();
-                bulkCopy.Dispose();
-                bulkCopy = null;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Close()

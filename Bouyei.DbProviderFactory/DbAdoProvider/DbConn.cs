@@ -130,7 +130,9 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 dbCommand = dbFactory.CreateCommand();
             }
             if (dbTrans != null) dbCommand.Transaction = dbTrans;
-            if (dbParameter.IsStoredProcedure) dbCommand.CommandType = CommandType.StoredProcedure; 
+
+            if (dbParameter.IsStoredProcedure)
+                dbCommand.CommandType = CommandType.StoredProcedure; 
             
             dbCommand.Connection = dbConn;
             dbCommand.CommandText = dbParameter.CommandText;
@@ -230,13 +232,11 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             else
             {
                 AssemblyFactoryInfo assemInfo = null;
-
                 AssemblyCache.TryGetValue(DbProviderType, out assemInfo);
                 if (assemInfo == null)
                 {
                     assemInfo = GetDynamicDllProviderInfo(invariantName);
                     assemInfo.FactoryName = GetFactoryName(DbProviderType);
-
                     AssemblyCache.Add(DbProviderType, assemInfo);
                 }
 

@@ -20,6 +20,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
     internal class SqlBulk:IDisposable
     {
         SqlBulkCopy bulkCopy = null;
+        bool disposed = false;
+
         public BulkCopiedArgs BulkCopiedHandler { get; set; }
 
         public BulkCopyOptions Option { get; private set; }
@@ -34,6 +36,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
 
             bulkCopy = CreatedBulkCopy(option);
             bulkCopy.BulkCopyTimeout = timeout;
+            bulkCopy.EnableStreaming = true;
         }
 
         public SqlBulk(IDbConnection dbConnection, IDbTransaction dbTrans = null,
@@ -47,6 +50,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             else bulkCopy = new SqlBulkCopy(connection, (SqlBulkCopyOptions)option, (SqlTransaction)dbTrans);
 
             bulkCopy.BulkCopyTimeout = timeout;
+            bulkCopy.EnableStreaming = true;
         }
 
         private SqlBulkCopy CreatedBulkCopy(BulkCopyOptions option)
@@ -61,13 +65,25 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider.Plugins
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+
+            if (disposing)
+            {
+                if (bulkCopy != null)
+                {
+                    bulkCopy.Close();
+                    bulkCopy = null;
+                }
+            }
+            disposed = true;
+        }
+
         public void Dispose()
         {
-            if (bulkCopy != null)
-            {
-                bulkCopy.Close();
-                bulkCopy = null;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Close()

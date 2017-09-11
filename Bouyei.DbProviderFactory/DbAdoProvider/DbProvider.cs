@@ -23,20 +23,26 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
     {
         #region variable
         private int signal = 0;
+        private bool disposed = false;
+        private int lockInterval = 1000;
 
         public string DbConnectionString { get; set; }
         
         public ProviderType DbType { get; set; }
 
-        public int LockTimeout { get; set; }
+        private int timeoutLock = 5000;//millseconds
+        public int TimeoutLock
+        {
+            get { return timeoutLock; }
+            set
+            {
+                timeoutLock = value < 5000 ? 5000 : timeoutLock;
+            }
+        }
 
         #endregion
 
         #region  dispose
-        ~DbProvider()
-        {
-            Dispose(false);
-        }
 
         public void Dispose()
         {
@@ -46,6 +52,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         protected virtual void Dispose(bool disposing)
         {
+            if (disposed) return;
+
             if (disposing)
             {
                 if (this.dbConn != null) this.dbConn.Dispose();
@@ -55,6 +63,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 if (this.dbCommandBuilder != null) dbCommandBuilder.Dispose();
                 if (this.dbTransaction != null) dbTransaction.Dispose();
             }
+            disposed = true;
         }
 
         #endregion
@@ -96,10 +105,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         #region public
         public ResultInfo<bool, string> Connect(string ConnectionString)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock))
+                {
+                    return ResultInfo<bool,string>.Create(false, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             this.DbConnectionString = ConnectionString;
             try
@@ -123,10 +139,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<DataTable, string> Query(DbExecuteParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<DataTable, string>.Create(null, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -159,10 +182,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<DataSet, string> QueryToSet(DbExecuteParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<DataSet, string>.Create(null, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -170,17 +200,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     if (conn.State != ConnectionState.Open) conn.Open();
 
-                    DataSet dt = new DataSet();
+                    DataSet ds = new DataSet();
 
                     using (DbDataAdapter adapter = CreateAdapter())
                     {
                         using (DbCommand cmd = CreateCommand(dbExecuteParameter, conn))
                         {
                             adapter.SelectCommand = cmd;
-                            adapter.Fill(dt);
+                            adapter.Fill(ds);
                         }
                     }
-                    return new ResultInfo<DataSet, string>(dt, string.Empty);
+                    return ResultInfo<DataSet, string>.Create(ds, string.Empty);
                 }
             }
             catch (Exception ex)
@@ -195,10 +225,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<int, string> QueryToReader(DbExecuteParameter dbExecuteParameter, Func<IDataReader,bool> rowAction)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if(_times>= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -225,7 +262,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                     }
                 }
 
-                return ResultInfo<int, string>.Create<int, string>(rows, string.Empty);
+                return ResultInfo<int, string>.Create(rows, string.Empty);
             }
             catch (Exception ex)
             {
@@ -240,10 +277,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         public ResultInfo<int,string> QueryTo<T>(DbExecuteParameter dbExecuteParameter,Func<T,bool> rowAction)
              where T:new()
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -271,7 +315,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                     }
                 }
 
-                return ResultInfo<int, string>.Create<int, string>(rows, string.Empty);
+                return ResultInfo<int, string>.Create(rows, string.Empty);
             }
             catch (Exception ex)
             {
@@ -285,10 +329,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<IDataReader, string> QueryToReader(DbExecuteParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<IDataReader, string>.Create(null, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -305,7 +356,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
             catch (Exception ex)
             {
-                return new ResultInfo<IDataReader, string>(null, ex.Message);
+                return   ResultInfo<IDataReader, string>.Create(null, ex.Message);
             }
             finally
             {
@@ -315,10 +366,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<int, string> ExecuteCmd(DbExecuteParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -331,14 +389,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                         var rValue = GetReturnParameter(cmd);
 
-                        return new ResultInfo<int, string>(rt < 0 ? 0 : rt,
+                        return   ResultInfo<int, string>.Create(rt < 0 ? 0 : rt,
                             rValue == null ? string.Empty : rValue.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new ResultInfo<int, string>(-1, ex.ToString());
+                return   ResultInfo<int, string>.Create(-1, ex.ToString());
             }
             finally
             {
@@ -348,10 +406,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<int, string> QueryToTable(DbExecuteParameter dbExecuteParameter, DataTable dstTable)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -367,14 +432,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                             dstTable.Load(dReader);
 
-                            return new ResultInfo<int, string>(dstTable.Rows.Count - oCnt, string.Empty);
+                            return   ResultInfo<int, string>.Create(dstTable.Rows.Count - oCnt, string.Empty);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new ResultInfo<int, string>(-1, ex.ToString());
+                return   ResultInfo<int, string>.Create(-1, ex.ToString());
             }
             finally
             {
@@ -390,10 +455,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         /// <returns></returns>
         public ResultInfo<int, string> ExecuteTransaction(DbExecuteParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -411,21 +483,21 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                                 var rValue = GetReturnParameter(cmd);
 
-                                return new ResultInfo<int, string>(rt < 0 ? 0 : rt,
+                                return   ResultInfo<int, string>.Create(rt < 0 ? 0 : rt,
                                     rValue != null ? rValue.ToString() : string.Empty);
                             }
                         }
                         catch (Exception ex)
                         {
                             tran.Rollback();
-                            return new ResultInfo<int, string>(-1, ex.ToString());
+                            return   ResultInfo<int, string>.Create(-1, ex.ToString());
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new ResultInfo<int, string>(-1, ex.ToString());
+                return   ResultInfo<int, string>.Create(-1, ex.ToString());
             }
             finally
             {
@@ -441,10 +513,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         /// <returns></returns>
         public ResultInfo<int, string> ExecuteTransaction(string[] CommandTexts, int timeout = 1800)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + timeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -491,10 +570,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<T, string> ExecuteScalar<T>(DbExecuteParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<T, string>.Create(default(T), "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -508,14 +594,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                         var rValue = GetReturnParameter(cmd);
 
-                        return new ResultInfo<T, string>(obj == null ? default(T) : (T)obj,
+                        return   ResultInfo<T, string>.Create(obj == null ? default(T) : (T)obj,
                           rValue == null ? string.Empty : rValue.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new ResultInfo<T, string>(default(T), ex.ToString());
+                return ResultInfo<T, string>.Create(default(T), ex.ToString());
             }
             finally
             {
@@ -525,10 +611,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<int, string> BulkCopy(DbExecuteBulkParameter dbExecuteParameter)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -584,11 +677,11 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
                 if (temex != null) throw temex;
 
-                return new ResultInfo<int, string>(cnt, string.Empty);
+                return   ResultInfo<int, string>.Create(cnt, string.Empty);
             }
             catch (Exception ex)
             {
-                return new ResultInfo<int, string>(-1, ex.ToString());
+                return   ResultInfo<int, string>.Create(-1, ex.ToString());
             }
             finally
             {
@@ -598,10 +691,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 
         public ResultInfo<List<T>, string> Query<T>(DbExecuteParameter dbExecuteParameter) where T : new()
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<List<T>, string>.Create(null, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -614,18 +714,18 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                         using (DbDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
-                                return new ResultInfo<List<T>, string>(new List<T>(1), string.Empty);
+                                return ResultInfo<List<T>, string>.Create(new List<T>(1), string.Empty);
 
                             var items = reader.GetGenericObjectValues<T>(dbExecuteParameter.IgnoreCase);
 
-                            return new ResultInfo<List<T>, string>(items, string.Empty);
+                            return ResultInfo<List<T>, string>.Create(items, string.Empty);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new ResultInfo<List<T>, string>(null, ex.ToString());
+                return ResultInfo<List<T>, string>.Create(null, ex.ToString());
             }
             finally
             {
@@ -641,10 +741,17 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         /// <returns></returns>
         public ResultInfo<int, string> QueryChanged(DbExecuteParameter dbExecuteParameter, Func<DataTable,bool> action)
         {
+            int _times = 0;
             while (Interlocked.CompareExchange(ref signal, 1, 0) == 1)
             {
-                Thread.Sleep(LockTimeout);
+                Thread.Sleep(lockInterval);
+
                 //waiting for lock to do;
+                if (_times >= (timeoutLock + dbExecuteParameter.ExectueTimeout))
+                {
+                    return ResultInfo<int, string>.Create(-1, "等待锁超时...");
+                }
+                _times += lockInterval;
             }
             try
             {
@@ -660,10 +767,10 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                             adapter.SelectCommand = cmd;
                             adapter.Fill(dt);
 
-                            if (dt.Rows.Count == 0) return new ResultInfo<int, string>(-1, "无可更新的数据行");
+                            if (dt.Rows.Count == 0) return ResultInfo<int, string>.Create(-1, "无可更新的数据行");
 
                             bool isContinue = action(dt);
-                            if (isContinue == false) return new ResultInfo<int, string>(0, string.Empty);
+                            if (isContinue == false) return ResultInfo<int, string>.Create(0, string.Empty);
 
                             DataTable changedt = dt.GetChanges(DataRowState.Added | DataRowState.Deleted | DataRowState.Modified);
                             if (changedt != null && changedt.Rows.Count > 0)
@@ -672,12 +779,12 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                                 {
                                     dbBuilder.DataAdapter = adapter;
                                     int rt = adapter.Update(changedt);
-                                    return new ResultInfo<int, string>(rt, string.Empty);
+                                    return ResultInfo<int, string>.Create(rt, string.Empty);
                                 }
                             }
                             else
                             {
-                                return new ResultInfo<int, string>(0, string.Empty);
+                                return ResultInfo<int, string>.Create(0, string.Empty);
                             }
                         }
                     }
@@ -685,7 +792,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
             catch (Exception ex)
             {
-                return new ResultInfo<int, string>(-1, ex.ToString());
+                return ResultInfo<int, string>.Create(-1, ex.ToString());
             }
             finally
             {
