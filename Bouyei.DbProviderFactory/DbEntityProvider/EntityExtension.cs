@@ -17,7 +17,7 @@ using System.Data.Entity.Infrastructure;
 
 namespace Bouyei.DbProviderFactory.DbEntityProvider
 {
-    internal static class Extension
+    internal static class EntityExtension
     {
         public static void Detach<TEntity>(this DbContext dbContext, TEntity entity) where TEntity : class
         {

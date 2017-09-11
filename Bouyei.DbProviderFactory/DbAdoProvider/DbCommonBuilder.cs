@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
-     public class DbConn
+    public class DbCommonBuilder
     {
         protected System.Data.Common.DbProviderFactory dbFactory = null;
 
@@ -23,7 +23,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         protected DbDataAdapter dbDataAdapter = null;
         protected DbCommand dbCommand = null;
         protected DbTransaction dbTransaction = null;
-        protected DbBulkCopy dbBulkCopy = null;
+        protected DbCommonBulkCopy dbBulkCopy = null;
         protected DbCommandBuilder dbCommandBuilder = null;
         protected ProviderType DbProviderType { get; private set; }
 
@@ -50,7 +50,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         /// </summary>
         /// <param name="dbProviderType"></param>
         /// <param name="IsSingleton"></param>
-        protected DbConn(ProviderType dbProviderType,
+        protected DbCommonBuilder(ProviderType dbProviderType,
              bool IsSingleton)
         {
             this.IsSingleton = IsSingleton;
@@ -132,8 +132,8 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             if (dbTrans != null) dbCommand.Transaction = dbTrans;
 
             if (dbParameter.IsStoredProcedure)
-                dbCommand.CommandType = CommandType.StoredProcedure; 
-            
+                dbCommand.CommandType = CommandType.StoredProcedure;
+
             dbCommand.Connection = dbConn;
             dbCommand.CommandText = dbParameter.CommandText;
             dbCommand.CommandTimeout = dbParameter.ExectueTimeout;
@@ -213,14 +213,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         }
 
 
-        protected DbBulkCopy CreateBulkCopy(string ConnectionString, bool isTransaction = false)
+        protected DbCommonBulkCopy CreateBulkCopy(string ConnectionString, bool isTransaction = false)
         {
             if (dbBulkCopy != null) dbBulkCopy.Dispose();
 
             if (isTransaction)
-                dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString, CreateConnection(ConnectionString));
+                dbBulkCopy = new DbCommonBulkCopy(DbProviderType, ConnectionString, CreateConnection(ConnectionString));
             else
-                dbBulkCopy = new DbBulkCopy(DbProviderType, ConnectionString);
+                dbBulkCopy = new DbCommonBulkCopy(DbProviderType, ConnectionString);
 
             return dbBulkCopy;
         }
@@ -327,6 +327,4 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
         }
     }
-
-  
 }

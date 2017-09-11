@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Bouyei.ProviderFactory")]
+[assembly: AssemblyTitle("Bouyei.DbProviderFactory")]
 [assembly: AssemblyDescription("the interface for Support SQL server, Oracle, DB2, mysql, access, SQLite, etc.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("bouyei")]
-[assembly: AssemblyProduct("Bouyei.ProviderFactory")]
-[assembly: AssemblyCopyright("Copyright © bouyei 2017")]
+[assembly: AssemblyProduct("Bouyei.DbProviderFactory")]
+[assembly: AssemblyCopyright("Copyright © 2017 bouyei")]
 [assembly: AssemblyTrademark("bouyei")]
 [assembly: AssemblyCulture("")]
 

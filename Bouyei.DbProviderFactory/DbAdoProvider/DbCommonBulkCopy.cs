@@ -13,7 +13,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
 {
     using Plugins;
 
-    public class DbBulkCopy : IDbBulkCopy
+    public class DbCommonBulkCopy : IDbBulkCopy
     {
         #region public field
                 public BulkCopiedArgs BulkCopiedHandler { get; set; }
@@ -42,7 +42,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         OracleBulk oracleBulkCopy = null;
         MysqlBulk mySqlBulkCopy = null;
 
-        ~DbBulkCopy()
+        ~DbCommonBulkCopy()
         {
             Dispose(false);
         }
@@ -63,14 +63,14 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
         }
 
-        protected DbBulkCopy(ProviderType providerType,
+        protected DbCommonBulkCopy(ProviderType providerType,
            string connectionString)
         {
             this.ConnectionString = connectionString;
             this.ProviderName = providerType;
         }
 
-        public DbBulkCopy(ProviderType providerType, 
+        public DbCommonBulkCopy(ProviderType providerType, 
             string connectionString,
             int bulkcopyTimeout = 1800,
             int batchSize = 102400,
@@ -108,7 +108,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             }
         }
 
-        public DbBulkCopy(ProviderType providerType,
+        public DbCommonBulkCopy(ProviderType providerType,
             string connectionString, 
             IDbConnection dbConnection,
             int bulkcopyTimeout = 1800,

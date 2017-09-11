@@ -19,7 +19,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
     /// <summary>
     /// 连接池
     /// </summary>
-    public class DbProvider : DbConn, IDbProvider
+    public class DbProvider : DbCommonBuilder, IDbProvider
     {
         #region variable
         private int signal = 0;
@@ -627,7 +627,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
             {
                 Exception temex = null;
                 int cnt = 0;
-                using (DbBulkCopy bulkCopy = CreateBulkCopy(DbConnectionString, dbExecuteParameter.IsTransaction))
+                using (DbCommonBulkCopy bulkCopy = CreateBulkCopy(DbConnectionString, dbExecuteParameter.IsTransaction))
                 {
                     bulkCopy.Open();
                     bulkCopy.BulkCopiedHandler = dbExecuteParameter.BulkCopiedHandler;

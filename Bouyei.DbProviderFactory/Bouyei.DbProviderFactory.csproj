@@ -72,6 +72,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>dbProviderFactory.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -108,8 +114,8 @@
   <ItemGroup>
     <Compile Include="UtilIO\DbReflection.cs" />
     <Compile Include="UtilIO\DataTableHelper.cs" />
-    <Compile Include="DbAdoProvider\Entities\Models.cs" />
-    <Compile Include="DbAdoProvider\Entities\ProviderType.cs" />
+    <Compile Include="DbAdoProvider\Entities\Structures.cs" />
+    <Compile Include="DbAdoProvider\Entities\Enums.cs" />
     <Compile Include="DbAdoProvider\IDbProvider.cs" />
     <Compile Include="DbAdoProvider\Plugins\Db2Bulk.cs" />
     <Compile Include="DbAdoProvider\Plugins\MysqlBulk.cs" />
@@ -150,18 +156,19 @@
     <Compile Include="DbEntityProvider\EntityInitializer.cs" />
     <Compile Include="DbEntityProvider\EntityProvider.cs" />
     <Compile Include="DbEntityProvider\IEntityProvider.cs" />
-    <Compile Include="DbAdoProvider\DbBulkCopy.cs" />
-    <Compile Include="DbAdoProvider\DbConn.cs" />
+    <Compile Include="DbAdoProvider\DbCommonBulkCopy.cs" />
+    <Compile Include="DbAdoProvider\DbCommonBuilder.cs" />
     <Compile Include="DbAdoProvider\DbProvider.cs" />
     <Compile Include="DbAdoProvider\IDbBulkCopy.cs" />
     <Compile Include="AdoProvider.cs" />
-    <Compile Include="DbEntityProvider\Extension.cs" />
+    <Compile Include="DbEntityProvider\EntityExtension.cs" />
     <Compile Include="DbMapper\EntityMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UtilIO\CsvHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="dbProviderFactory.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
