@@ -30,13 +30,13 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
         
         public ProviderType DbType { get; set; }
 
-        private int timeoutLock = 5000;//millseconds
+        private int timeoutLock = 5;//s
         public int TimeoutLock
         {
             get { return timeoutLock; }
             set
             {
-                timeoutLock = value < 5000 ? 5000 : timeoutLock;
+                timeoutLock = value < 5 ? 5 : timeoutLock;
             }
         }
 
@@ -115,7 +115,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<bool,string>.Create(false, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times += (lockInterval / 1000);
             }
             this.DbConnectionString = ConnectionString;
             try
@@ -149,7 +149,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<DataTable, string>.Create(null, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times += (lockInterval/1000);
             }
             try
             {
@@ -192,7 +192,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<DataSet, string>.Create(null, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -235,7 +235,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -287,7 +287,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -339,7 +339,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<IDataReader, string>.Create(null, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -376,7 +376,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -416,7 +416,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -465,7 +465,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -523,7 +523,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -580,7 +580,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<T, string>.Create(default(T), "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -621,7 +621,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -701,7 +701,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<List<T>, string>.Create(null, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
@@ -751,7 +751,7 @@ namespace Bouyei.DbProviderFactory.DbAdoProvider
                 {
                     return ResultInfo<int, string>.Create(-1, "等待锁超时...");
                 }
-                _times += lockInterval;
+                _times +=(lockInterval/1000);
             }
             try
             {
